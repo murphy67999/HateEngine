@@ -164,4 +164,8 @@ CMakeFiles/HateEngine.dir/src/main.cpp.o: \
  /usr/lib/gcc/x86_64-linux-gnu/14/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
- /usr/include/GLFW/glfw3.h
+ /usr/include/GLFW/glfw3.h \
+ /home/mirak/Documents/HateEngine/include/Window.hpp \
+ /home/mirak/Documents/HateEngine/include/Shader.hpp \
+ /home/mirak/Documents/HateEngine/include/VBO.hpp \
+ /home/mirak/Documents/HateEngine/include/VAO.hpp

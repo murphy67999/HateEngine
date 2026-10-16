@@ -9,6 +9,11 @@ find_package(glfw3 REQUIRED)
 add_executable(HateEngine
     src/main.cpp
     glad/src/glad.c
+    src/Window.cpp
+    src/Shader.cpp
+    src/VAO.cpp
+    src/VBO.cpp
+    src/EBO.cpp
 )
 
 target_include_directories(HateEngine PRIVATE
