@@ -182,13 +182,29 @@ CMakeFiles/HateEngine.dir/src/main.cpp.o: \
  /usr/include/c++/14/tr1/poly_hermite.tcc \
  /usr/include/c++/14/tr1/poly_laguerre.tcc \
  /usr/include/c++/14/tr1/riemann_zeta.tcc \
- /home/mirak/Documents/HateEngine/glad/include/glad/glad.h \
- /home/mirak/Documents/HateEngine/glad/include/KHR/khrplatform.h \
+ /home/mirak/Documents/HateEngine/external/glad/include/glad/glad.h \
+ /home/mirak/Documents/HateEngine/external/glad/include/KHR/khrplatform.h \
  /usr/lib/gcc/x86_64-linux-gnu/14/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
  /usr/include/GLFW/glfw3.h \
+ /home/mirak/Documents/HateEngine/external/stb/stb_image.h \
+ /usr/include/c++/14/stdlib.h /usr/include/string.h \
+ /usr/include/strings.h /usr/lib/gcc/x86_64-linux-gnu/14/include/limits.h \
+ /usr/lib/gcc/x86_64-linux-gnu/14/include/syslimits.h \
+ /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/local_lim.h \
+ /usr/include/linux/limits.h \
+ /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/uio_lim.h /usr/include/c++/14/math.h \
+ /usr/include/assert.h \
+ /usr/lib/gcc/x86_64-linux-gnu/14/include/emmintrin.h \
+ /usr/lib/gcc/x86_64-linux-gnu/14/include/xmmintrin.h \
+ /usr/lib/gcc/x86_64-linux-gnu/14/include/mmintrin.h \
+ /usr/lib/gcc/x86_64-linux-gnu/14/include/mm_malloc.h \
  /home/mirak/Documents/HateEngine/include/Window.hpp \
  /home/mirak/Documents/HateEngine/include/Shader.hpp \
  /home/mirak/Documents/HateEngine/include/VBO.hpp \
- /home/mirak/Documents/HateEngine/include/VAO.hpp
+ /home/mirak/Documents/HateEngine/include/VAO.hpp \
+ /home/mirak/Documents/HateEngine/include/EBO.hpp

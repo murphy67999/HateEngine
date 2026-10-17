@@ -86,19 +86,19 @@ CMakeFiles/HateEngine.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/HateEngine.dir/src/main.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mirak/Documents/HateEngine/src/main.cpp -o CMakeFiles/HateEngine.dir/src/main.cpp.s
 
-CMakeFiles/HateEngine.dir/glad/src/glad.c.o: CMakeFiles/HateEngine.dir/flags.make
-CMakeFiles/HateEngine.dir/glad/src/glad.c.o: /home/mirak/Documents/HateEngine/glad/src/glad.c
-CMakeFiles/HateEngine.dir/glad/src/glad.c.o: CMakeFiles/HateEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/mirak/Documents/HateEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/HateEngine.dir/glad/src/glad.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/HateEngine.dir/glad/src/glad.c.o -MF CMakeFiles/HateEngine.dir/glad/src/glad.c.o.d -o CMakeFiles/HateEngine.dir/glad/src/glad.c.o -c /home/mirak/Documents/HateEngine/glad/src/glad.c
+CMakeFiles/HateEngine.dir/external/glad/src/glad.c.o: CMakeFiles/HateEngine.dir/flags.make
+CMakeFiles/HateEngine.dir/external/glad/src/glad.c.o: /home/mirak/Documents/HateEngine/external/glad/src/glad.c
+CMakeFiles/HateEngine.dir/external/glad/src/glad.c.o: CMakeFiles/HateEngine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/mirak/Documents/HateEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/HateEngine.dir/external/glad/src/glad.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/HateEngine.dir/external/glad/src/glad.c.o -MF CMakeFiles/HateEngine.dir/external/glad/src/glad.c.o.d -o CMakeFiles/HateEngine.dir/external/glad/src/glad.c.o -c /home/mirak/Documents/HateEngine/external/glad/src/glad.c
 
-CMakeFiles/HateEngine.dir/glad/src/glad.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/HateEngine.dir/glad/src/glad.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mirak/Documents/HateEngine/glad/src/glad.c > CMakeFiles/HateEngine.dir/glad/src/glad.c.i
+CMakeFiles/HateEngine.dir/external/glad/src/glad.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/HateEngine.dir/external/glad/src/glad.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mirak/Documents/HateEngine/external/glad/src/glad.c > CMakeFiles/HateEngine.dir/external/glad/src/glad.c.i
 
-CMakeFiles/HateEngine.dir/glad/src/glad.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/HateEngine.dir/glad/src/glad.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mirak/Documents/HateEngine/glad/src/glad.c -o CMakeFiles/HateEngine.dir/glad/src/glad.c.s
+CMakeFiles/HateEngine.dir/external/glad/src/glad.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/HateEngine.dir/external/glad/src/glad.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mirak/Documents/HateEngine/external/glad/src/glad.c -o CMakeFiles/HateEngine.dir/external/glad/src/glad.c.s
 
 CMakeFiles/HateEngine.dir/src/Window.cpp.o: CMakeFiles/HateEngine.dir/flags.make
 CMakeFiles/HateEngine.dir/src/Window.cpp.o: /home/mirak/Documents/HateEngine/src/Window.cpp
@@ -173,7 +173,7 @@ CMakeFiles/HateEngine.dir/src/EBO.cpp.s: cmake_force
 # Object files for target HateEngine
 HateEngine_OBJECTS = \
 "CMakeFiles/HateEngine.dir/src/main.cpp.o" \
-"CMakeFiles/HateEngine.dir/glad/src/glad.c.o" \
+"CMakeFiles/HateEngine.dir/external/glad/src/glad.c.o" \
 "CMakeFiles/HateEngine.dir/src/Window.cpp.o" \
 "CMakeFiles/HateEngine.dir/src/Shader.cpp.o" \
 "CMakeFiles/HateEngine.dir/src/VAO.cpp.o" \
@@ -184,7 +184,7 @@ HateEngine_OBJECTS = \
 HateEngine_EXTERNAL_OBJECTS =
 
 HateEngine: CMakeFiles/HateEngine.dir/src/main.cpp.o
-HateEngine: CMakeFiles/HateEngine.dir/glad/src/glad.c.o
+HateEngine: CMakeFiles/HateEngine.dir/external/glad/src/glad.c.o
 HateEngine: CMakeFiles/HateEngine.dir/src/Window.cpp.o
 HateEngine: CMakeFiles/HateEngine.dir/src/Shader.cpp.o
 HateEngine: CMakeFiles/HateEngine.dir/src/VAO.cpp.o

@@ -8,7 +8,7 @@ public:
     Shader(const std::string& vertexPath, const std::string& fragmentPath);
     ~Shader();
     void use() const;
-    int getUniformLocation(std::string name) const;
+    void setUniformInt(const std::string& uniformName, int value) const;
 
 private:
     GLuint m_shaderProgram = 0;

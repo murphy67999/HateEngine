@@ -45,6 +45,6 @@ void Shader::use() const{
     glUseProgram(m_shaderProgram);
 }
 
-int Shader::getUniformLocation(std::string name) const{
-    return glGetUniformLocation(m_shaderProgram, name.c_str());
+void Shader::setUniformInt(const std::string& uniformName, int value) const{
+    glUniform1i(glGetUniformLocation(m_shaderProgram, uniformName.c_str()), value);
 }

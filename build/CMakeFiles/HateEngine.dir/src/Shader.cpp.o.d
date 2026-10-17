@@ -118,8 +118,8 @@ CMakeFiles/HateEngine.dir/src/Shader.cpp.o: \
  /usr/include/c++/14/bits/memory_resource.h /usr/include/c++/14/cstddef \
  /usr/include/c++/14/bits/uses_allocator.h \
  /usr/include/c++/14/bits/uses_allocator_args.h /usr/include/c++/14/tuple \
- /home/mirak/Documents/HateEngine/glad/include/glad/glad.h \
- /home/mirak/Documents/HateEngine/glad/include/KHR/khrplatform.h \
+ /home/mirak/Documents/HateEngine/external/glad/include/glad/glad.h \
+ /home/mirak/Documents/HateEngine/external/glad/include/KHR/khrplatform.h \
  /usr/lib/gcc/x86_64-linux-gnu/14/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \

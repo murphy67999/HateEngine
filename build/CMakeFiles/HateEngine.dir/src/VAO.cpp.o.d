@@ -1,7 +1,7 @@
 CMakeFiles/HateEngine.dir/src/VAO.cpp.o: \
  /home/mirak/Documents/HateEngine/src/VAO.cpp /usr/include/stdc-predef.h \
- /home/mirak/Documents/HateEngine/glad/include/glad/glad.h \
- /home/mirak/Documents/HateEngine/glad/include/KHR/khrplatform.h \
+ /home/mirak/Documents/HateEngine/external/glad/include/glad/glad.h \
+ /home/mirak/Documents/HateEngine/external/glad/include/KHR/khrplatform.h \
  /usr/lib/gcc/x86_64-linux-gnu/14/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \

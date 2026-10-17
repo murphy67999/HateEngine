@@ -129,29 +129,29 @@ HateEngine/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/HateEngine.dir/build.make CMakeFiles/HateEngine.dir/build
 .PHONY : HateEngine/fast
 
-glad/src/glad.o: glad/src/glad.c.o
-.PHONY : glad/src/glad.o
+external/glad/src/glad.o: external/glad/src/glad.c.o
+.PHONY : external/glad/src/glad.o
 
 # target to build an object file
-glad/src/glad.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/HateEngine.dir/build.make CMakeFiles/HateEngine.dir/glad/src/glad.c.o
-.PHONY : glad/src/glad.c.o
+external/glad/src/glad.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/HateEngine.dir/build.make CMakeFiles/HateEngine.dir/external/glad/src/glad.c.o
+.PHONY : external/glad/src/glad.c.o
 
-glad/src/glad.i: glad/src/glad.c.i
-.PHONY : glad/src/glad.i
+external/glad/src/glad.i: external/glad/src/glad.c.i
+.PHONY : external/glad/src/glad.i
 
 # target to preprocess a source file
-glad/src/glad.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/HateEngine.dir/build.make CMakeFiles/HateEngine.dir/glad/src/glad.c.i
-.PHONY : glad/src/glad.c.i
+external/glad/src/glad.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/HateEngine.dir/build.make CMakeFiles/HateEngine.dir/external/glad/src/glad.c.i
+.PHONY : external/glad/src/glad.c.i
 
-glad/src/glad.s: glad/src/glad.c.s
-.PHONY : glad/src/glad.s
+external/glad/src/glad.s: external/glad/src/glad.c.s
+.PHONY : external/glad/src/glad.s
 
 # target to generate assembly for a file
-glad/src/glad.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/HateEngine.dir/build.make CMakeFiles/HateEngine.dir/glad/src/glad.c.s
-.PHONY : glad/src/glad.c.s
+external/glad/src/glad.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/HateEngine.dir/build.make CMakeFiles/HateEngine.dir/external/glad/src/glad.c.s
+.PHONY : external/glad/src/glad.c.s
 
 src/EBO.o: src/EBO.cpp.o
 .PHONY : src/EBO.o
@@ -306,9 +306,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... HateEngine"
-	@echo "... glad/src/glad.o"
-	@echo "... glad/src/glad.i"
-	@echo "... glad/src/glad.s"
+	@echo "... external/glad/src/glad.o"
+	@echo "... external/glad/src/glad.i"
+	@echo "... external/glad/src/glad.s"
 	@echo "... src/EBO.o"
 	@echo "... src/EBO.i"
 	@echo "... src/EBO.s"

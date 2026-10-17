@@ -160,8 +160,8 @@ CMakeFiles/HateEngine.dir/src/Window.cpp.o: \
  /usr/include/c++/14/bits/basic_ios.tcc \
  /usr/include/c++/14/bits/ostream.tcc /usr/include/c++/14/istream \
  /usr/include/c++/14/bits/istream.tcc \
- /home/mirak/Documents/HateEngine/glad/include/glad/glad.h \
- /home/mirak/Documents/HateEngine/glad/include/KHR/khrplatform.h \
+ /home/mirak/Documents/HateEngine/external/glad/include/glad/glad.h \
+ /home/mirak/Documents/HateEngine/external/glad/include/KHR/khrplatform.h \
  /usr/lib/gcc/x86_64-linux-gnu/14/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \

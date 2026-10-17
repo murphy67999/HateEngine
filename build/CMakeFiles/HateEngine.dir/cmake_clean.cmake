@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/HateEngine.dir/link.d"
-  "CMakeFiles/HateEngine.dir/glad/src/glad.c.o"
-  "CMakeFiles/HateEngine.dir/glad/src/glad.c.o.d"
+  "CMakeFiles/HateEngine.dir/external/glad/src/glad.c.o"
+  "CMakeFiles/HateEngine.dir/external/glad/src/glad.c.o.d"
   "CMakeFiles/HateEngine.dir/src/EBO.cpp.o"
   "CMakeFiles/HateEngine.dir/src/EBO.cpp.o.d"
   "CMakeFiles/HateEngine.dir/src/Shader.cpp.o"

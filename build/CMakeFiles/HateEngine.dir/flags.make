@@ -5,13 +5,13 @@
 # compile CXX with /usr/bin/c++
 C_DEFINES = 
 
-C_INCLUDES = -I/home/mirak/Documents/HateEngine/include -I/home/mirak/Documents/HateEngine/glad/include
+C_INCLUDES = -I/home/mirak/Documents/HateEngine/include -I/home/mirak/Documents/HateEngine/external/glad/include -I/home/mirak/Documents/HateEngine/external/stb
 
 C_FLAGS = 
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/mirak/Documents/HateEngine/include -I/home/mirak/Documents/HateEngine/glad/include
+CXX_INCLUDES = -I/home/mirak/Documents/HateEngine/include -I/home/mirak/Documents/HateEngine/external/glad/include -I/home/mirak/Documents/HateEngine/external/stb
 
 CXX_FLAGS = -std=gnu++17
 
