@@ -575,7 +575,6 @@ CMakeFiles/HateEngine.dir/src/main.cpp.o
  /home/mirak/Documents/HateEngine/src/main.cpp
  /home/mirak/Documents/HateEngine/glad/include/KHR/khrplatform.h
  /home/mirak/Documents/HateEngine/glad/include/glad/glad.h
- /home/mirak/Documents/HateEngine/include/EBO.hpp
  /home/mirak/Documents/HateEngine/include/Shader.hpp
  /home/mirak/Documents/HateEngine/include/VAO.hpp
  /home/mirak/Documents/HateEngine/include/VBO.hpp
@@ -629,6 +628,7 @@ CMakeFiles/HateEngine.dir/src/main.cpp.o
  /usr/include/c++/14/bits/range_access.h
  /usr/include/c++/14/bits/refwrap.h
  /usr/include/c++/14/bits/requires_hosted.h
+ /usr/include/c++/14/bits/specfun.h
  /usr/include/c++/14/bits/std_abs.h
  /usr/include/c++/14/bits/stl_algobase.h
  /usr/include/c++/14/bits/stl_construct.h
@@ -648,6 +648,7 @@ CMakeFiles/HateEngine.dir/src/main.cpp.o
  /usr/include/c++/14/cctype
  /usr/include/c++/14/cerrno
  /usr/include/c++/14/clocale
+ /usr/include/c++/14/cmath
  /usr/include/c++/14/concepts
  /usr/include/c++/14/cstddef
  /usr/include/c++/14/cstdio
@@ -667,6 +668,7 @@ CMakeFiles/HateEngine.dir/src/main.cpp.o
  /usr/include/c++/14/iosfwd
  /usr/include/c++/14/iostream
  /usr/include/c++/14/istream
+ /usr/include/c++/14/limits
  /usr/include/c++/14/new
  /usr/include/c++/14/ostream
  /usr/include/c++/14/pstl/pstl_config.h
@@ -675,6 +677,18 @@ CMakeFiles/HateEngine.dir/src/main.cpp.o
  /usr/include/c++/14/string
  /usr/include/c++/14/string_view
  /usr/include/c++/14/system_error
+ /usr/include/c++/14/tr1/bessel_function.tcc
+ /usr/include/c++/14/tr1/beta_function.tcc
+ /usr/include/c++/14/tr1/ell_integral.tcc
+ /usr/include/c++/14/tr1/exp_integral.tcc
+ /usr/include/c++/14/tr1/gamma.tcc
+ /usr/include/c++/14/tr1/hypergeometric.tcc
+ /usr/include/c++/14/tr1/legendre_function.tcc
+ /usr/include/c++/14/tr1/modified_bessel_func.tcc
+ /usr/include/c++/14/tr1/poly_hermite.tcc
+ /usr/include/c++/14/tr1/poly_laguerre.tcc
+ /usr/include/c++/14/tr1/riemann_zeta.tcc
+ /usr/include/c++/14/tr1/special_function_util.h
  /usr/include/c++/14/tuple
  /usr/include/c++/14/type_traits
  /usr/include/c++/14/typeinfo
@@ -689,6 +703,7 @@ CMakeFiles/HateEngine.dir/src/main.cpp.o
  /usr/include/linux/stddef.h
  /usr/include/linux/types.h
  /usr/include/locale.h
+ /usr/include/math.h
  /usr/include/pthread.h
  /usr/include/sched.h
  /usr/include/stdc-predef.h
@@ -706,9 +721,19 @@ CMakeFiles/HateEngine.dir/src/main.cpp.o
  /usr/include/x86_64-linux-gnu/bits/errno.h
  /usr/include/x86_64-linux-gnu/bits/floatn-common.h
  /usr/include/x86_64-linux-gnu/bits/floatn.h
+ /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h
+ /usr/include/x86_64-linux-gnu/bits/fp-fast.h
+ /usr/include/x86_64-linux-gnu/bits/fp-logb.h
+ /usr/include/x86_64-linux-gnu/bits/iscanonical.h
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h
+ /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h
  /usr/include/x86_64-linux-gnu/bits/locale.h
  /usr/include/x86_64-linux-gnu/bits/long-double.h
+ /usr/include/x86_64-linux-gnu/bits/math-vector.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-macros.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h
  /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h

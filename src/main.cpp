@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <cmath>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -17,9 +17,9 @@ int main(){
     Shader testShader("shaders/test.vs", "shaders/test.fs");
 
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f,  
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f   
+        0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
+        0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f
     };
 
     VBO vbo;
@@ -29,7 +29,10 @@ int main(){
     vbo.setData(sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     vao.bind();
-    vao.setAttribute(0, 3, GL_FLOAT, 3*sizeof(float), (void*)0);
+    // pos attribute
+    vao.setAttribute(0, 3, GL_FLOAT, 6*sizeof(float), (void*)0);
+    // color attribute
+    vao.setAttribute(1, 3, GL_FLOAT, 6*sizeof(float), (void*)(3*sizeof(float)));
 
     vbo.unbind();
     vao.unbind();
