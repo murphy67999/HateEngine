@@ -1,3 +1,0 @@
-/home/mirak/Documents/HateEngine/build/CMakeFiles/HateEngine.dir
-/home/mirak/Documents/HateEngine/build/CMakeFiles/edit_cache.dir
-/home/mirak/Documents/HateEngine/build/CMakeFiles/rebuild_cache.dir

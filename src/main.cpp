@@ -10,6 +10,7 @@
 #include "VBO.hpp"
 #include "VAO.hpp"
 #include "EBO.hpp"
+#include "Texture.hpp"
 
 int main(){
     std::cout << "hello Hate Engine\n";
@@ -53,64 +54,24 @@ int main(){
     vao.unbind();
     ebo.unbind();
 
-    GLuint texture1;
-    glGenTextures(1, &texture1);
-    glBindTexture(GL_TEXTURE_2D, texture1);
+    Texture awesomeFace("assets/awesomeface.png", GL_RGBA);
+    Texture container("assets/container.jpg", GL_RGB);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glActiveTexture(GL_TEXTURE0);
+    awesomeFace.bind();
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char* ptr_data = stbi_load("assets/container.jpg", &width, &height, &nrChannels, 0);
-
-    if (ptr_data){
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, ptr_data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    } else{
-        std::cout << stbi_failure_reason() << '\n';
-    }
-    stbi_image_free(ptr_data);
-
-    GLuint texture2;
-    glGenTextures(1, &texture2);
-    glBindTexture(GL_TEXTURE_2D, texture2);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    stbi_set_flip_vertically_on_load(true);
-    ptr_data = stbi_load("assets/wall.jpg", &width, &height, &nrChannels, 0);
-
-    if (ptr_data){
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, ptr_data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    } else{
-        std::cout << stbi_failure_reason() << '\n';
-    }
-    stbi_image_free(ptr_data);
+    glActiveTexture(GL_TEXTURE1);
+    container.bind();
 
     testShader.use();
     testShader.setUniformInt("texture1", 0);
     testShader.setUniformInt("texture2", 1);
-    
 
     // main loop
     while (!window.shouldClose()){
         // render
         glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture1);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, texture2);
 
         vao.bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
