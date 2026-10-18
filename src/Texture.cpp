@@ -1,4 +1,5 @@
-#include "stb_image.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.h"
 #include <string>
 
 #include "Texture.hpp"
@@ -21,6 +22,10 @@ Texture::Texture(const std::string& texturePath, GLint internalFormat){
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, internalFormat, GL_UNSIGNED_BYTE, ptr_data);
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(ptr_data);
+}
+
+Texture::~Texture(){
+    glDeleteTextures(1, &m_texture);
 }
 
 void Texture::bind() const{

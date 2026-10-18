@@ -8,7 +8,7 @@ find_package(glfw3 REQUIRED)
 
 add_executable(HateEngine
     src/main.cpp
-    external/glad/src/glad.c
+    external/src/glad.c
     src/Window.cpp
     src/Shader.cpp
     src/VAO.cpp
@@ -19,8 +19,7 @@ add_executable(HateEngine
 
 target_include_directories(HateEngine PRIVATE
     include
-    external/glad/include
-    external/stb
+    external/include
 )
 
 target_link_libraries(HateEngine PRIVATE

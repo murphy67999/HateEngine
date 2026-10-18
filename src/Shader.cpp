@@ -48,3 +48,7 @@ void Shader::use() const{
 void Shader::setUniformInt(const std::string& uniformName, int value) const{
     glUniform1i(glGetUniformLocation(m_shaderProgram, uniformName.c_str()), value);
 }
+
+void Shader::setUniformMatrix4fv(const std::string& uniformName, const GLfloat* value) const{
+    glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, uniformName.c_str()), 1, GL_FALSE, value);
+}
