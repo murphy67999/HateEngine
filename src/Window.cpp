@@ -1,8 +1,5 @@
-#include <iostream>
-
-#include <string>
-
 #include "glad/glad.h"
+
 #include "Window.hpp"
 
 void framebuffer_size_callback(GLFWwindow *ptr_window, int width, int height)
@@ -52,4 +49,9 @@ void Window::update() const
 {
     glfwSwapBuffers(m_ptr_window);
     glfwPollEvents();
+}
+
+GLFWwindow *Window::getWindow() const
+{
+    return m_ptr_window;
 }

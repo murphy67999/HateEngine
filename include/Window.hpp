@@ -12,6 +12,7 @@ public:
     ~Window();
     bool shouldClose() const;
     void update() const;
+    GLFWwindow *getWindow() const;
 
 private:
     GLFWwindow *m_ptr_window = nullptr;

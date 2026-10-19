@@ -1,5 +1,3 @@
-#include <glad/glad.h>
-
 #include "EBO.hpp"
 
 EBO::EBO()

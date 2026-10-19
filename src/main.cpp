@@ -1,16 +1,13 @@
 #include <iostream>
-#include <cmath>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Window.hpp"
 #include "Shader.hpp"
+#include "Window.hpp"
 #include "VBO.hpp"
 #include "VAO.hpp"
 #include "Texture.hpp"
+#include "Camera.hpp"
+#include "Input.hpp"
 
 int main()
 {
@@ -86,9 +83,7 @@ int main()
     vbo.setData(sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     vao.bind();
-    // pos attribute
     vao.setAttribute(0, 3, GL_FLOAT, 5 * sizeof(float), (void *)0);
-    // texture attribute
     vao.setAttribute(1, 2, GL_FLOAT, 5 * sizeof(float), (void *)(3 * sizeof(float)));
 
     vbo.unbind();
@@ -107,19 +102,21 @@ int main()
     testShader.setUniformInt("texture1", 0);
     testShader.setUniformInt("texture2", 1);
 
+    Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    Input input;
+
     // main loop
     while (!window.shouldClose())
     {
-        // render
         glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // test math
-        glm::mat4 view = glm::mat4(1.0f);
-        glm::mat4 projection = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
-        projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+        input.process(window.getWindow(), camera);
+
+        glm::mat4 view = camera.getLookAt();
         testShader.setUniformMatrix4fv("view", glm::value_ptr(view));
+
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
         testShader.setUniformMatrix4fv("projection", glm::value_ptr(projection));
 
         vao.bind();
@@ -128,14 +125,11 @@ int main()
         {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, glm::vec3(cubePositions[i]));
-            float angle = glfwGetTime();
-            model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+            model = glm::rotate(model, static_cast<float>(glfwGetTime()), glm::vec3(1.0f, 0.3f, 0.5f));
             testShader.setUniformMatrix4fv("model", glm::value_ptr(model));
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
-
-        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         window.update();
     }

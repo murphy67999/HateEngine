@@ -15,6 +15,8 @@ add_executable(HateEngine
     src/VBO.cpp
     src/EBO.cpp
     src/Texture.cpp
+    src/Input.cpp
+    src/Camera.cpp
 )
 
 target_include_directories(HateEngine PRIVATE

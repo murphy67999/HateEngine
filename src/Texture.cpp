@@ -1,8 +1,7 @@
+#include "Texture.hpp"
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
-#include <string>
-
-#include "Texture.hpp"
 
 Texture::Texture(const std::string &texturePath, GLint internalFormat)
 {

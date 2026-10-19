@@ -1,9 +1,7 @@
 #include "Shader.hpp"
 
-#include <string>
 #include <fstream>
 #include <sstream>
-#include "glad/glad.h"
 
 std::string loadTextFile(const std::string &path)
 {
