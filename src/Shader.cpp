@@ -5,21 +5,23 @@
 #include <sstream>
 #include "glad/glad.h"
 
-std::string loadTextFile(const std::string& path){
+std::string loadTextFile(const std::string &path)
+{
     std::ifstream file(path);
     std::stringstream buffer;
 
     buffer << file.rdbuf();
 
     return buffer.str();
-}   
+}
 
-Shader::Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath){
+Shader::Shader(const std::string &vertexShaderPath, const std::string &fragmentShaderPath)
+{
     std::string vertexText = loadTextFile(vertexShaderPath);
     std::string fragmentText = loadTextFile(fragmentShaderPath);
 
-    const char* ptr_vertexShaderSource = vertexText.c_str();
-    const char* ptr_fragmentShaderSource = fragmentText.c_str();
+    const char *ptr_vertexShaderSource = vertexText.c_str();
+    const char *ptr_fragmentShaderSource = fragmentText.c_str();
 
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -37,18 +39,22 @@ Shader::Shader(const std::string& vertexShaderPath, const std::string& fragmentS
     glDeleteShader(fragmentShader);
 }
 
-Shader::~Shader(){
+Shader::~Shader()
+{
     glDeleteProgram(m_shaderProgram);
 }
 
-void Shader::use() const{
+void Shader::use() const
+{
     glUseProgram(m_shaderProgram);
 }
 
-void Shader::setUniformInt(const std::string& uniformName, int value) const{
+void Shader::setUniformInt(const std::string &uniformName, int value) const
+{
     glUniform1i(glGetUniformLocation(m_shaderProgram, uniformName.c_str()), value);
 }
 
-void Shader::setUniformMatrix4fv(const std::string& uniformName, const GLfloat* value) const{
+void Shader::setUniformMatrix4fv(const std::string &uniformName, const GLfloat *value) const
+{
     glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, uniformName.c_str()), 1, GL_FALSE, value);
 }

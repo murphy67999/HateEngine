@@ -4,7 +4,8 @@
 
 #include "Texture.hpp"
 
-Texture::Texture(const std::string& texturePath, GLint internalFormat){
+Texture::Texture(const std::string &texturePath, GLint internalFormat)
+{
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
 
@@ -17,17 +18,19 @@ Texture::Texture(const std::string& texturePath, GLint internalFormat){
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
 
-    unsigned char* ptr_data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
+    unsigned char *ptr_data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
 
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, internalFormat, GL_UNSIGNED_BYTE, ptr_data);
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(ptr_data);
 }
 
-Texture::~Texture(){
+Texture::~Texture()
+{
     glDeleteTextures(1, &m_texture);
 }
 
-void Texture::bind() const{
+void Texture::bind() const
+{
     glBindTexture(GL_TEXTURE_2D, m_texture);
 }
