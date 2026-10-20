@@ -103,7 +103,9 @@ int main()
     testShader.setUniformInt("texture2", 1);
 
     Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    Input input;
+    Input input(window.getWindow(), camera);
+
+    float lastFrame = 0.0f;
 
     // main loop
     while (!window.shouldClose())
@@ -111,11 +113,15 @@ int main()
         glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        input.process(window.getWindow(), camera);
+        float dt = 0.0f;
+        float currentFrame = static_cast<float>(glfwGetTime());
+        dt = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        input.process(dt);
 
         glm::mat4 view = camera.getLookAt();
         testShader.setUniformMatrix4fv("view", glm::value_ptr(view));
-
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
         testShader.setUniformMatrix4fv("projection", glm::value_ptr(projection));
 

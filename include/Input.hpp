@@ -7,5 +7,10 @@ class Camera;
 class Input
 {
 public:
-    void process(GLFWwindow *window, Camera &camera);
+    Input(GLFWwindow *window, Camera &camera);
+    void process(float dt);
+
+private:
+    GLFWwindow *m_window;
+    Camera &m_camera;
 };

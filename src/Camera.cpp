@@ -28,3 +28,15 @@ glm::mat4 Camera::getLookAt() const
 {
     return glm::lookAt(m_pos, m_pos + m_front, m_up);
 }
+
+void Camera::processMouseMovement(float xOffset, float yOffset)
+{
+    m_yaw += xOffset * m_sensitivity;
+    m_pitch += yOffset * m_sensitivity;
+
+    m_pitch = glm::clamp(m_pitch, -89.0f, 89.0f);
+
+    m_front.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
+    m_front.y = sin(glm::radians(m_pitch));
+    m_front.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
+}

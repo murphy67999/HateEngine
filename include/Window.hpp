@@ -15,5 +15,5 @@ public:
     GLFWwindow *getWindow() const;
 
 private:
-    GLFWwindow *m_ptr_window = nullptr;
+    GLFWwindow *m_window = nullptr;
 };
