@@ -12,6 +12,7 @@ public:
     void moveRight(float dt);
     glm::mat4 getLookAt() const;
     void processMouseMovement(float xOffset, float yOffset);
+    glm::vec3 getPos() const;
 
 private:
     glm::vec3 m_pos;

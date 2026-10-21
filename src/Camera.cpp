@@ -40,3 +40,8 @@ void Camera::processMouseMovement(float xOffset, float yOffset)
     m_front.y = sin(glm::radians(m_pitch));
     m_front.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
 }
+
+glm::vec3 Camera::getPos() const
+{
+    return m_pos;
+}
