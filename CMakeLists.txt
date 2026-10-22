@@ -8,7 +8,7 @@ find_package(glfw3 REQUIRED)
 
 add_executable(HateEngine
     src/main.cpp
-    external/src/glad.c
+    external/glad/src/glad.c
     src/Window.cpp
     src/Shader.cpp
     src/VAO.cpp
@@ -17,11 +17,20 @@ add_executable(HateEngine
     src/Texture.cpp
     src/Input.cpp
     src/Camera.cpp
+    external/imgui/imgui.cpp
+    external/imgui/imgui_draw.cpp
+    external/imgui/imgui_tables.cpp
+    external/imgui/imgui_widgets.cpp
+    external/imgui/backends/imgui_impl_glfw.cpp
+    external/imgui/backends/imgui_impl_opengl3.cpp
 )
 
 target_include_directories(HateEngine PRIVATE
-    include
-    external/include
+    include/
+    external/
+    external/glad/include/
+    external/glm/
+    external/imgui/
 )
 
 target_link_libraries(HateEngine PRIVATE

@@ -1,4 +1,4 @@
-#include "glad/glad.h"
+#include <glad/glad.h>
 
 #include "Window.hpp"
 
@@ -23,6 +23,7 @@ Window::Window(int width, int height, const std::string &title)
     }
 
     glfwMakeContextCurrent(m_window);
+    glfwSwapInterval(0);
     glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
 
     if ((!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)))

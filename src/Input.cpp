@@ -5,26 +5,27 @@
 namespace
 {
     Camera *cam;
+    bool rotateCamera = false;
+    bool firstMouse = false;
 
-    void mouseCallBack(GLFWwindow *window, double xPos, double yPos)
+    void mouseCallBack(GLFWwindow *window, double newX, double newY)
     {
+        if (!rotateCamera)
+            return;
+
         static float lastX = 0.0f;
         static float lastY = 0.0f;
-        static bool firstMouse = true;
-
-        float newX = static_cast<float>(xPos);
-        float newY = static_cast<float>(yPos);
 
         if (firstMouse)
         {
-            lastX = newX;
-            lastY = newY;
             firstMouse = false;
-            return;
+            lastX = 800.0f;
+            lastY = 400.0f;
         }
 
         float xOffset = newX - lastX;
         float yOffset = lastY - newY;
+
         lastX = newX;
         lastY = newY;
 
@@ -37,8 +38,7 @@ Input::Input(GLFWwindow *window, Camera &camera)
 {
     cam = &camera;
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetCursorPosCallback(window, mouseCallBack);
+    glfwSetCursorPosCallback(m_window, mouseCallBack);
 }
 
 void Input::process(float dt)
@@ -54,4 +54,21 @@ void Input::process(float dt)
         m_camera.moveLeft(dt);
     if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS)
         m_camera.moveRight(dt);
+
+    static bool zWasPressed = false;
+    bool zIsPressed = glfwGetKey(m_window, GLFW_KEY_Z) == GLFW_PRESS;
+    if (zIsPressed && !zWasPressed)
+    {
+        rotateCamera = !rotateCamera;
+        if (rotateCamera)
+        {
+            firstMouse = true;
+            glfwSetCursorPos(m_window, 800.0, 400.0);
+            glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+        else
+            glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+
+    zWasPressed = zIsPressed;
 }
