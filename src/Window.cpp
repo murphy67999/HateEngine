@@ -2,9 +2,12 @@
 
 #include "Window.hpp"
 
-void framebuffer_size_callback(GLFWwindow *ptr_window, int width, int height)
+namespace
 {
-    glViewport(0, 0, width, height);
+    void framebuffer_size_callback(GLFWwindow *ptr_window, int width, int height)
+    {
+        glViewport(0, 0, width, height);
+    }
 }
 
 Window::Window(int width, int height, const std::string &title)

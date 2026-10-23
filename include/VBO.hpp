@@ -12,5 +12,5 @@ public:
     void setData(GLsizeiptr size, const void *data, GLenum usage) const;
 
 private:
-    GLuint m_VBO;
+    GLuint m_VBO = 0;
 };
