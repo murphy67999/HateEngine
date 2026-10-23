@@ -1,8 +1,8 @@
 #include <iostream>
-#include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Shader.hpp"
 #include "Window.hpp"
@@ -127,32 +127,32 @@ int main()
         cubeShader.use();
 
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1600.0f / 800.0f, 0.1f, 100.0f);
-        cubeShader.setUniformMatrix4fv("projection", glm::value_ptr(projection));
+        cubeShader.setUniform("projection", projection);
         glm::mat4 view = camera.getLookAt();
-        cubeShader.setUniformMatrix4fv("view", glm::value_ptr(view));
+        cubeShader.setUniform("view", view);
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, cubePos);
-        cubeShader.setUniformMatrix4fv("model", glm::value_ptr(model));
+        cubeShader.setUniform("model", model);
 
-        cubeShader.setUniformVec3("objectColor", cubeColor);
-        cubeShader.setUniformVec3("lightColor", lightColor);
-        cubeShader.setUniformVec3("lightPos", lightPos);
-        cubeShader.setUniformVec3("viewPos", camera.getPos());
-        cubeShader.setUniformFloat("shininess", shininess);
+        cubeShader.setUniform("objectColor", cubeColor);
+        cubeShader.setUniform("lightColor", lightColor);
+        cubeShader.setUniform("lightPos", lightPos);
+        cubeShader.setUniform("viewPos", camera.getPos());
+        cubeShader.setUniform("shininess", shininess);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // ---------------------------------------------------------------------------------------
         lightShader.use();
 
-        lightShader.setUniformMatrix4fv("projection", glm::value_ptr(projection));
-        lightShader.setUniformMatrix4fv("view", glm::value_ptr(view));
+        lightShader.setUniform("projection", projection);
+        lightShader.setUniform("view", view);
         model = glm::mat4(1.0f);
         model = glm::translate(model, lightPos);
         model = glm::scale(model, glm::vec3(0.5f));
-        lightShader.setUniformMatrix4fv("model", glm::value_ptr(model));
+        lightShader.setUniform("model", model);
 
-        lightShader.setUniformVec3("lightColor", lightColor);
+        lightShader.setUniform("lightColor", lightColor);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -190,6 +190,10 @@ int main()
         // ---------------------------------------------------------------------------------------
         window.update();
     }
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     return 0;
 }

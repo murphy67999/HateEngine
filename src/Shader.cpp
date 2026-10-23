@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <glm/gtc/type_ptr.hpp>
 
 std::string loadTextFile(const std::string &path)
 {
@@ -47,22 +48,22 @@ void Shader::use() const
     glUseProgram(m_shaderProgram);
 }
 
-void Shader::setUniformInt(const std::string &uniformName, int value) const
+void Shader::setUniform(const std::string &uniformName, int value) const
 {
     glUniform1i(glGetUniformLocation(m_shaderProgram, uniformName.c_str()), value);
 }
 
-void Shader::setUniformMatrix4fv(const std::string &uniformName, const GLfloat *value) const
-{
-    glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, uniformName.c_str()), 1, GL_FALSE, value);
-}
-
-void Shader::setUniformVec3(const std::string &uniformName, glm::vec3 value) const
-{
-    glUniform3f(glGetUniformLocation(m_shaderProgram, uniformName.c_str()), value.x, value.y, value.z);
-}
-
-void Shader::setUniformFloat(const std::string &uniformName, float value) const
+void Shader::setUniform(const std::string &uniformName, float value) const
 {
     glUniform1f(glGetUniformLocation(m_shaderProgram, uniformName.c_str()), value);
+}
+
+void Shader::setUniform(const std::string &uniformName, glm::vec3 value) const
+{
+    glUniform3fv(glGetUniformLocation(m_shaderProgram, uniformName.c_str()), 1, glm::value_ptr(value));
+}
+
+void Shader::setUniform(const std::string &uniformName, glm::mat4 value) const
+{
+    glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, uniformName.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
