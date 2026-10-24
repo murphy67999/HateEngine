@@ -11,9 +11,6 @@ add_executable(HateEngine
     external/glad/src/glad.c
     src/Window.cpp
     src/Shader.cpp
-    src/VAO.cpp
-    src/VBO.cpp
-    src/EBO.cpp
     src/Texture.cpp
     src/Input.cpp
     src/Camera.cpp
@@ -23,6 +20,7 @@ add_executable(HateEngine
     external/imgui/imgui_widgets.cpp
     external/imgui/backends/imgui_impl_glfw.cpp
     external/imgui/backends/imgui_impl_opengl3.cpp
+    src/Mesh.cpp
 )
 
 target_include_directories(HateEngine PRIVATE

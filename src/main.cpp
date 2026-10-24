@@ -3,13 +3,14 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <vector>
+#include <string>
 
 #include "Shader.hpp"
 #include "Window.hpp"
-#include "VBO.hpp"
-#include "VAO.hpp"
 #include "Camera.hpp"
 #include "Input.hpp"
+#include "Mesh.hpp"
 
 int main()
 {
@@ -26,66 +27,65 @@ int main()
 
     Input input(window.getWindow(), camera);
 
-    Shader cubeShader("shaders/cube.vs", "shaders/cube.fs");
-    Shader lightShader("shaders/light.vs", "shaders/light.fs");
-
     // ---------------------------------------------------------------------------------------
-    float vertices[] = {
-        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-        0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-        0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-        0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-        -0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+    float cubeVertices[108] = {
+        -0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, 0.5f, -0.5f,
+        0.5f, 0.5f, -0.5f,
+        -0.5f, 0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
 
-        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-        0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-        0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-        0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-        -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f, 0.5f,
+        0.5f, -0.5f, 0.5f,
+        0.5f, 0.5f, 0.5f,
+        0.5f, 0.5f, 0.5f,
+        -0.5f, 0.5f, 0.5f,
+        -0.5f, -0.5f, 0.5f,
 
-        -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
-        -0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
-        -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f,
+        -0.5f, 0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, 0.5f,
+        -0.5f, 0.5f, 0.5f,
 
-        0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
-        0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
-        0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
-        0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
+        0.5f, 0.5f, 0.5f,
+        0.5f, 0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, 0.5f,
+        0.5f, 0.5f, 0.5f,
 
-        -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
-        0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
-        0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
-        0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
-        -0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, 0.5f,
+        0.5f, -0.5f, 0.5f,
+        -0.5f, -0.5f, 0.5f,
+        -0.5f, -0.5f, -0.5f,
 
-        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-        0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-        0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
-        0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
-        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
-        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f};
+        -0.5f, 0.5f, -0.5f,
+        0.5f, 0.5f, -0.5f,
+        0.5f, 0.5f, 0.5f,
+        0.5f, 0.5f, 0.5f,
+        -0.5f, 0.5f, 0.5f,
+        -0.5f, 0.5f, -0.5f};
 
-    // ---------------------------------------------------------------------------------------
-    VBO vbo;
-    VAO vao;
+    unsigned int VBO, VAO;
 
-    vbo.bind();
-    vbo.setData(sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glGenBuffers(1, &VBO);
+    glGenVertexArrays(1, &VAO);
 
-    vao.bind();
-    vao.setAttribute(0, 3, GL_FLOAT, 6 * sizeof(float), (void *)0);
-    vao.setAttribute(1, 3, GL_FLOAT, 6 * sizeof(float), (void *)(3 * sizeof(float)));
+    glBindVertexArray(VAO);
 
-    vbo.unbind();
-    vao.unbind();
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 
     // ---------------------------------------------------------------------------------------
     IMGUI_CHECKVERSION();
@@ -97,14 +97,10 @@ int main()
     // ---------------------------------------------------------------------------------------
     float lastFrame = 0.0f;
 
-    glm::vec3 cubePos(0.0f, 0.0f, 0.0f);
-    glm::vec3 cubeColor(1.0f);
-    float shininess = 32.0f;
-
-    glm::vec3 lightPos(1.5f, 0.0f, 0.0f);
-    glm::vec3 lightColor(1.0f);
-
     glm::vec3 backgroundColor(0.0f);
+
+    std::vector<Mesh> meshes;
+    Shader shader("shaders/cube.vs", "shaders/cube.fs");
 
     // main loop
     while (!window.shouldClose())
@@ -121,40 +117,12 @@ int main()
 
         input.process(dt);
 
-        vao.bind();
-
         // ---------------------------------------------------------------------------------------
-        cubeShader.use();
-
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1600.0f / 800.0f, 0.1f, 100.0f);
-        cubeShader.setUniform("projection", projection);
-        glm::mat4 view = camera.getLookAt();
-        cubeShader.setUniform("view", view);
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, cubePos);
-        cubeShader.setUniform("model", model);
-
-        cubeShader.setUniform("objectColor", cubeColor);
-        cubeShader.setUniform("lightColor", lightColor);
-        cubeShader.setUniform("lightPos", lightPos);
-        cubeShader.setUniform("viewPos", camera.getPos());
-        cubeShader.setUniform("shininess", shininess);
-
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-
-        // ---------------------------------------------------------------------------------------
-        lightShader.use();
-
-        lightShader.setUniform("projection", projection);
-        lightShader.setUniform("view", view);
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.5f));
-        lightShader.setUniform("model", model);
-
-        lightShader.setUniform("lightColor", lightColor);
-
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        for (Mesh mesh : meshes)
+        {
+            glBindVertexArray(VAO);
+            mesh.render(camera.getLookAt(), shader);
+        }
 
         // ---------------------------------------------------------------------------------------
         ImGui_ImplOpenGL3_NewFrame();
@@ -166,21 +134,33 @@ int main()
         ImGui::Text("Vendor: %s", (const char *)glGetString(GL_VENDOR));
         ImGui::Text("FPS: %.1f", 1.0f / dt);
 
-        ImGui::SeparatorText("Cube");
-        ImGui::PushID("Cube");
-        ImGui::DragFloat3("Position", &cubePos.x, 0.05f);
-        ImGui::ColorEdit3("Color", &cubeColor.x);
-        ImGui::SliderFloat("Shininess", &shininess, 1.0f, 256.0f);
-        ImGui::PopID();
+        ImGui::SeparatorText("Background");
+        ImGui::ColorEdit3("Color", &backgroundColor.x);
 
-        ImGui::SeparatorText("Light");
-        ImGui::PushID("Light");
-        ImGui::DragFloat3("Position", &lightPos.x, 0.05f);
-        ImGui::ColorEdit3("Color", &lightColor.x);
-        ImGui::PopID();
+        if (ImGui::Button("Cube"))
+        {
+            meshes.emplace_back();
+        }
 
-        ImGui::SeparatorText("Environment");
-        ImGui::ColorEdit3("Background Color", &backgroundColor.x);
+        for (int i = 0; i < meshes.size(); i++)
+        {
+            Mesh &mesh = meshes[i];
+
+            ImGui::PushID(i);
+
+            std::string text = "Mesh " + std::to_string(i);
+
+            ImGui::SeparatorText(text.c_str());
+            ImGui::DragFloat3("Position", &mesh.position.x, 0.1f);
+            ImGui::DragFloat3("Scale", &mesh.scale.x, 0.1f);
+            ImGui::ColorEdit3("Color", &mesh.color.x);
+            if (ImGui::Button("Delete"))
+            {
+                meshes.erase(meshes.begin() + i);
+            }
+
+            ImGui::PopID();
+        }
 
         ImGui::End();
 
