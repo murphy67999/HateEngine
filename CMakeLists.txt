@@ -21,6 +21,7 @@ add_executable(HateEngine
     external/imgui/backends/imgui_impl_glfw.cpp
     external/imgui/backends/imgui_impl_opengl3.cpp
     src/Mesh.cpp
+    external/imgui/misc/cpp/imgui_stdlib.cpp
 )
 
 target_include_directories(HateEngine PRIVATE
