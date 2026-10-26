@@ -21,7 +21,7 @@ Window::Window(int width, int height, const std::string &title)
 
     if (!m_window)
     {
-        isValid = false;
+        m_isValid = false;
         return;
     }
 
@@ -31,11 +31,11 @@ Window::Window(int width, int height, const std::string &title)
 
     if ((!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)))
     {
-        isValid = false;
+        m_isValid = false;
         return;
     }
 
-    isValid = true;
+    m_isValid = true;
 }
 
 Window::~Window()
@@ -58,4 +58,9 @@ void Window::update() const
 GLFWwindow *Window::getWindow() const
 {
     return m_window;
+}
+
+bool Window::isValid() const
+{
+    return m_isValid;
 }

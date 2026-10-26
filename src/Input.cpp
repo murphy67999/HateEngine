@@ -4,7 +4,9 @@
 
 namespace
 {
-    Camera *cam;
+    GLFWwindow *n_window = nullptr;
+    Camera *n_camera = nullptr;
+
     bool rotateCamera = false;
     bool firstMouse = false;
 
@@ -29,46 +31,50 @@ namespace
         lastX = newX;
         lastY = newY;
 
-        cam->processMouseMovement(xOffset, yOffset);
+        n_camera->processMouseMovement(xOffset, yOffset);
     };
 }
 
-Input::Input(GLFWwindow *window, Camera &camera)
-    : m_window(window), m_camera(camera)
+namespace Input
 {
-    cam = &camera;
-
-    glfwSetCursorPosCallback(m_window, mouseCallBack);
-}
-
-void Input::process(float dt)
-{
-    if (glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(m_window, true);
-
-    if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS)
-        m_camera.moveForward(dt);
-    if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS)
-        m_camera.moveBackward(dt);
-    if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS)
-        m_camera.moveLeft(dt);
-    if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS)
-        m_camera.moveRight(dt);
-
-    static bool zWasPressed = false;
-    bool zIsPressed = glfwGetKey(m_window, GLFW_KEY_Z) == GLFW_PRESS;
-    if (zIsPressed && !zWasPressed)
+    void init(GLFWwindow *window, Camera *camera)
     {
-        rotateCamera = !rotateCamera;
-        if (rotateCamera)
-        {
-            firstMouse = true;
-            glfwSetCursorPos(m_window, 800.0, 400.0);
-            glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        }
-        else
-            glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        n_window = window;
+        n_camera = camera;
+
+        glfwSetCursorPosCallback(window, mouseCallBack);
     }
 
-    zWasPressed = zIsPressed;
+    void process(float dt)
+    {
+        if (glfwGetKey(n_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(n_window, true);
+
+        if (glfwGetKey(n_window, GLFW_KEY_W) == GLFW_PRESS)
+            n_camera->moveForward(dt);
+        if (glfwGetKey(n_window, GLFW_KEY_S) == GLFW_PRESS)
+            n_camera->moveBackward(dt);
+        if (glfwGetKey(n_window, GLFW_KEY_A) == GLFW_PRESS)
+            n_camera->moveLeft(dt);
+        if (glfwGetKey(n_window, GLFW_KEY_D) == GLFW_PRESS)
+            n_camera->moveRight(dt);
+
+        static bool zWasPressed = false;
+        bool zIsPressed = glfwGetKey(n_window, GLFW_KEY_Z) == GLFW_PRESS;
+        if (zIsPressed && !zWasPressed)
+        {
+            rotateCamera = !rotateCamera;
+            if (rotateCamera)
+            {
+                firstMouse = true;
+                glfwSetCursorPos(n_window, 800.0, 400.0);
+                glfwSetInputMode(n_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            }
+            else
+                glfwSetInputMode(n_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+
+        zWasPressed = zIsPressed;
+    }
+
 }
