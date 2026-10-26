@@ -2,7 +2,9 @@
 
 #include <glad/glad.h>
 
-void Mesh::render(glm::mat4 view, Shader &shader) const
+Mesh::Mesh(MeshType type) : type(type) {};
+
+void Mesh::setup(glm::mat4 view, Shader &shader) const
 {
     shader.use();
 
@@ -15,6 +17,4 @@ void Mesh::render(glm::mat4 view, Shader &shader) const
     shader.setUniform("model", model);
 
     shader.setUniform("color", color);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
 }

@@ -29,64 +29,77 @@ int main()
     Input::init(window.getWindow(), &camera);
 
     // ---------------------------------------------------------------------------------------
-    float cubeVertices[108] = {
+    float cubeVertices[] = {
         -0.5f, -0.5f, -0.5f,
         0.5f, -0.5f, -0.5f,
-        0.5f, 0.5f, -0.5f,
         0.5f, 0.5f, -0.5f,
         -0.5f, 0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-
         -0.5f, -0.5f, 0.5f,
         0.5f, -0.5f, 0.5f,
         0.5f, 0.5f, 0.5f,
-        0.5f, 0.5f, 0.5f,
-        -0.5f, 0.5f, 0.5f,
-        -0.5f, -0.5f, 0.5f,
+        -0.5f, 0.5f, 0.5f};
 
-        -0.5f, 0.5f, 0.5f,
-        -0.5f, 0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, 0.5f,
-        -0.5f, 0.5f, 0.5f,
+    unsigned int cubeIndices[] = {
+        0, 1, 2, 2, 3, 0,
+        4, 5, 6, 6, 7, 4,
+        0, 3, 7, 7, 4, 0,
+        1, 5, 6, 6, 2, 1,
+        0, 1, 5, 5, 4, 0,
+        3, 2, 6, 6, 7, 3};
 
-        0.5f, 0.5f, 0.5f,
-        0.5f, 0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, 0.5f,
-        0.5f, 0.5f, 0.5f,
-
+    float pyramidVertices[] = {
         -0.5f, -0.5f, -0.5f,
         0.5f, -0.5f, -0.5f,
         0.5f, -0.5f, 0.5f,
-        0.5f, -0.5f, 0.5f,
         -0.5f, -0.5f, 0.5f,
-        -0.5f, -0.5f, -0.5f,
+        0.0f, 0.5f, 0.0f};
 
-        -0.5f, 0.5f, -0.5f,
-        0.5f, 0.5f, -0.5f,
-        0.5f, 0.5f, 0.5f,
-        0.5f, 0.5f, 0.5f,
-        -0.5f, 0.5f, 0.5f,
-        -0.5f, 0.5f, -0.5f};
+    unsigned int pyramidIndices[] = {
+        0, 2, 1, 0, 3, 2,
+        0, 1, 4, 1, 2, 4,
+        2, 3, 4, 3, 0, 4};
 
-    unsigned int VBO, VAO;
+    unsigned int cubeVAO, cubeVBO, cubeEBO;
 
-    glGenBuffers(1, &VBO);
-    glGenVertexArrays(1, &VAO);
+    glGenVertexArrays(1, &cubeVAO);
+    glGenBuffers(1, &cubeVBO);
+    glGenBuffers(1, &cubeEBO);
 
-    glBindVertexArray(VAO);
+    glBindVertexArray(cubeVAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeIndices), &cubeIndices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    unsigned int pyramidVAO, pyramidVBO, pyramidEBO;
+
+    glGenVertexArrays(1, &pyramidVAO);
+    glGenBuffers(1, &pyramidVBO);
+    glGenBuffers(1, &pyramidEBO);
+
+    glBindVertexArray(pyramidVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, pyramidVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(pyramidVertices), &pyramidVertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pyramidEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(pyramidIndices), &pyramidIndices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glEnableVertexAttribArray(0);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     // ---------------------------------------------------------------------------------------
     IMGUI_CHECKVERSION();
@@ -122,8 +135,19 @@ int main()
         // ---------------------------------------------------------------------------------------
         for (Mesh mesh : meshes)
         {
-            glBindVertexArray(VAO);
-            mesh.render(camera.getLookAt(), shader);
+            switch (mesh.type)
+            {
+            case CUBE:
+                glBindVertexArray(cubeVAO);
+                mesh.setup(camera.getLookAt(), shader);
+                glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+                break;
+            case PYRAMID:
+                glBindVertexArray(pyramidVAO);
+                mesh.setup(camera.getLookAt(), shader);
+                glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
+                break;
+            }
         }
 
         // ---------------------------------------------------------------------------------------
@@ -139,10 +163,21 @@ int main()
         ImGui::SeparatorText("Background");
         ImGui::ColorEdit3("Color", &backgroundColor.x);
 
+        ImGui::Separator();
+
         if (ImGui::Button("Cube"))
         {
-            meshes.emplace_back();
+            meshes.emplace_back(CUBE);
         }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Pyramid"))
+        {
+            meshes.emplace_back(PYRAMID);
+        }
+
+        ImGui::Separator();
 
         ImGui::InputText("Project Name", &projectName);
 
