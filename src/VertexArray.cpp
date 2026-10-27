@@ -1,6 +1,6 @@
-#include "Geometry.hpp"
+#include "VertexArray.hpp"
 
-Geometry::Geometry(float *vertices, GLsizeiptr verticesSize, unsigned int *indices, GLsizeiptr indicesSize)
+VertexArray::VertexArray(float *vertices, GLsizeiptr verticesSize, unsigned int *indices, GLsizeiptr indicesSize)
 {
     glGenVertexArrays(1, &m_VAO);
     glGenBuffers(1, &m_VBO);
@@ -22,14 +22,14 @@ Geometry::Geometry(float *vertices, GLsizeiptr verticesSize, unsigned int *indic
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-Geometry::~Geometry()
+VertexArray::~VertexArray()
 {
     glDeleteVertexArrays(1, &m_VAO);
     glDeleteBuffers(1, &m_VBO);
     glDeleteBuffers(1, &m_EBO);
 }
 
-void Geometry::bind() const
+void VertexArray::bind() const
 {
     glBindVertexArray(m_VAO);
 }

@@ -2,11 +2,11 @@
 
 #include <glad/glad.h>
 
-class Geometry
+class VertexArray
 {
 public:
-    Geometry(float *vertices, GLsizeiptr verticesSize, unsigned int *indices, GLsizeiptr indicesSize);
-    ~Geometry();
+    VertexArray(float *vertices, GLsizeiptr verticesSize, unsigned int *indices, GLsizeiptr indicesSize);
+    ~VertexArray();
     void bind() const;
 
 private:

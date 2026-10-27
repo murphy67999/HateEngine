@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Shader.hpp"
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
 
 enum class GeometryType
 {
     CUBE,
-    PYRAMID
+    PYRAMID,
+    OCTAHEDRON
 };
 
 class Mesh
@@ -17,7 +18,7 @@ public:
     glm::vec3 color{1.0f};
 
     Mesh(GeometryType type);
-    void update(glm::mat4 view, Shader &shader) const;
+    void update(const glm::mat4 &view, Shader &shader) const;
     GeometryType getType() const;
 
 private:

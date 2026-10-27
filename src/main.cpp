@@ -13,7 +13,7 @@
 #include "Input.hpp"
 #include "Mesh.hpp"
 #include "Project.hpp"
-#include "Geometry.hpp"
+#include "VertexArray.hpp"
 
 int main()
 {
@@ -60,8 +60,23 @@ int main()
         0, 1, 4, 1, 2, 4,
         2, 3, 4, 3, 0, 4};
 
-    Geometry cube(cubeVertices, sizeof(cubeVertices), cubeIndices, sizeof(cubeIndices));
-    Geometry pyramid(pyramidVertices, sizeof(pyramidVertices), pyramidIndices, sizeof(pyramidIndices));
+    float octahedronVertices[] = {
+        0.0f, 0.5f, 0.0f,
+        0.0f, -0.5f, 0.0f,
+        -0.5f, 0.0f, 0.0f,
+        0.5f, 0.0f, 0.0f,
+        0.0f, 0.0f, 0.5f,
+        0.0f, 0.0f, -0.5f};
+
+    unsigned int octahedronIndices[] = {
+        0, 2, 4, 0, 4, 3,
+        0, 3, 5, 0, 5, 2,
+        1, 4, 2, 1, 3, 4,
+        1, 5, 3, 1, 2, 5};
+
+    VertexArray cube(cubeVertices, sizeof(cubeVertices), cubeIndices, sizeof(cubeIndices));
+    VertexArray pyramid(pyramidVertices, sizeof(pyramidVertices), pyramidIndices, sizeof(pyramidIndices));
+    VertexArray octahedron(octahedronVertices, sizeof(octahedronVertices), octahedronIndices, sizeof(octahedronIndices));
 
     // ---------------------------------------------------------------------------------------
     IMGUI_CHECKVERSION();
@@ -109,6 +124,11 @@ int main()
                 mesh.update(camera.getLookAt(), shader);
                 glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
                 break;
+            case GeometryType::OCTAHEDRON:
+                octahedron.bind();
+                mesh.update(camera.getLookAt(), shader);
+                glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
+                break;
             }
         }
 
@@ -139,6 +159,13 @@ int main()
             meshes.emplace_back(GeometryType::PYRAMID);
         }
 
+        ImGui::SameLine();
+
+        if (ImGui::Button("Octahedron"))
+        {
+            meshes.emplace_back(GeometryType::OCTAHEDRON);
+        }
+
         ImGui::Separator();
 
         ImGui::InputText("Project Name", &projectName);
@@ -147,6 +174,8 @@ int main()
         {
             Project::save(meshes, backgroundColor, projectName);
         }
+
+        ImGui::SameLine();
 
         if (ImGui::Button("Load"))
         {

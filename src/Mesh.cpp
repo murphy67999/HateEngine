@@ -1,10 +1,11 @@
 #include "Mesh.hpp"
 
 #include <glad/glad.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 Mesh::Mesh(GeometryType type) : m_type(type) {};
 
-void Mesh::update(glm::mat4 view, Shader &shader) const
+void Mesh::update(const glm::mat4 &view, Shader &shader) const
 {
     shader.use();
 
