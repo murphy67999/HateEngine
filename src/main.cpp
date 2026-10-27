@@ -13,6 +13,7 @@
 #include "Input.hpp"
 #include "Mesh.hpp"
 #include "Project.hpp"
+#include "Geometry.hpp"
 
 int main()
 {
@@ -59,47 +60,8 @@ int main()
         0, 1, 4, 1, 2, 4,
         2, 3, 4, 3, 0, 4};
 
-    unsigned int cubeVAO, cubeVBO, cubeEBO;
-
-    glGenVertexArrays(1, &cubeVAO);
-    glGenBuffers(1, &cubeVBO);
-    glGenBuffers(1, &cubeEBO);
-
-    glBindVertexArray(cubeVAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeIndices), &cubeIndices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-    unsigned int pyramidVAO, pyramidVBO, pyramidEBO;
-
-    glGenVertexArrays(1, &pyramidVAO);
-    glGenBuffers(1, &pyramidVBO);
-    glGenBuffers(1, &pyramidEBO);
-
-    glBindVertexArray(pyramidVAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, pyramidVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(pyramidVertices), &pyramidVertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pyramidEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(pyramidIndices), &pyramidIndices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    Geometry cube(cubeVertices, sizeof(cubeVertices), cubeIndices, sizeof(cubeIndices));
+    Geometry pyramid(pyramidVertices, sizeof(pyramidVertices), pyramidIndices, sizeof(pyramidIndices));
 
     // ---------------------------------------------------------------------------------------
     IMGUI_CHECKVERSION();
@@ -133,18 +95,18 @@ int main()
         Input::process(dt);
 
         // ---------------------------------------------------------------------------------------
-        for (Mesh mesh : meshes)
+        for (const Mesh &mesh : meshes)
         {
-            switch (mesh.type)
+            switch (mesh.getType())
             {
-            case CUBE:
-                glBindVertexArray(cubeVAO);
-                mesh.setup(camera.getLookAt(), shader);
+            case GeometryType::CUBE:
+                cube.bind();
+                mesh.update(camera.getLookAt(), shader);
                 glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
                 break;
-            case PYRAMID:
-                glBindVertexArray(pyramidVAO);
-                mesh.setup(camera.getLookAt(), shader);
+            case GeometryType::PYRAMID:
+                pyramid.bind();
+                mesh.update(camera.getLookAt(), shader);
                 glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
                 break;
             }
@@ -167,14 +129,14 @@ int main()
 
         if (ImGui::Button("Cube"))
         {
-            meshes.emplace_back(CUBE);
+            meshes.emplace_back(GeometryType::CUBE);
         }
 
         ImGui::SameLine();
 
         if (ImGui::Button("Pyramid"))
         {
-            meshes.emplace_back(PYRAMID);
+            meshes.emplace_back(GeometryType::PYRAMID);
         }
 
         ImGui::Separator();

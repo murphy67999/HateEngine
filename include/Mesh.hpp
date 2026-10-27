@@ -3,7 +3,7 @@
 #include "Shader.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
-enum MeshType
+enum class GeometryType
 {
     CUBE,
     PYRAMID
@@ -12,11 +12,14 @@ enum MeshType
 class Mesh
 {
 public:
-    MeshType type;
     glm::vec3 position{0.0f};
     glm::vec3 scale{1.0f};
     glm::vec3 color{1.0f};
 
-    Mesh(MeshType type);
-    void setup(glm::mat4 view, Shader &shader) const;
+    Mesh(GeometryType type);
+    void update(glm::mat4 view, Shader &shader) const;
+    GeometryType getType() const;
+
+private:
+    GeometryType m_type;
 };

@@ -23,6 +23,7 @@ add_executable(HateEngine
     src/Mesh.cpp
     external/imgui/misc/cpp/imgui_stdlib.cpp
     src/Project.cpp
+    src/Geometry.cpp
 )
 
 target_include_directories(HateEngine PRIVATE

@@ -2,9 +2,9 @@
 
 #include <glad/glad.h>
 
-Mesh::Mesh(MeshType type) : type(type) {};
+Mesh::Mesh(GeometryType type) : m_type(type) {};
 
-void Mesh::setup(glm::mat4 view, Shader &shader) const
+void Mesh::update(glm::mat4 view, Shader &shader) const
 {
     shader.use();
 
@@ -17,4 +17,9 @@ void Mesh::setup(glm::mat4 view, Shader &shader) const
     shader.setUniform("model", model);
 
     shader.setUniform("color", color);
+}
+
+GeometryType Mesh::getType() const
+{
+    return m_type;
 }
