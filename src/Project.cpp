@@ -3,13 +3,18 @@
 #include <json.hpp>
 #include <fstream>
 
-void Project::save(const std::vector<Mesh> &meshes, const glm::vec3 &backgroundColor, const std::string &projectName)
+void Project::save(const Light &light, const Environment &environment, const std::vector<Mesh> &meshes, const std::string &projectName)
 {
     nlohmann::json j;
 
-    j["background"] = {backgroundColor.x, backgroundColor.y, backgroundColor.z};
-    j["meshes"] = nlohmann::json::array();
+    j["environment"] = {{"backgroundColor", {environment.backgroundColor.x, environment.backgroundColor.y, environment.backgroundColor.z}},
+                        {"ambientStrength", environment.ambientStrength}};
 
+    j["light"] = {{"position", {light.pos.x, light.pos.y, light.pos.z}},
+                  {"color", {light.color.x, light.color.y, light.color.z}},
+                  {"specularStrength", light.specularStrength}};
+
+    j["meshes"] = nlohmann::json::array();
     for (const Mesh &mesh : meshes)
     {
         j["meshes"].push_back({{"type", mesh.getType()},
@@ -18,12 +23,12 @@ void Project::save(const std::vector<Mesh> &meshes, const glm::vec3 &backgroundC
                                {"color", {mesh.color.x, mesh.color.y, mesh.color.z}}});
     }
 
-    std::ofstream("games/" + projectName + ".hate") << j.dump(2);
+    std::ofstream("projects/" + projectName + ".hate") << j.dump(2);
 }
 
-void Project::load(std::vector<Mesh> &meshes, glm::vec3 &backgroundColor, std::string &projectName)
+void Project::load(Light &light, Environment &environment, std::vector<Mesh> &meshes, std::string &projectName)
 {
-    std::ifstream file("games/" + projectName + ".hate");
+    std::ifstream file("projects/" + projectName + ".hate");
     if (!file)
         return;
 
@@ -31,6 +36,19 @@ void Project::load(std::vector<Mesh> &meshes, glm::vec3 &backgroundColor, std::s
     file >> j;
 
     meshes.clear();
+
+    if (j.contains("environment"))
+    {
+        environment.backgroundColor = glm::vec3(j["environment"]["backgroundColor"][0], j["environment"]["backgroundColor"][1], j["environment"]["backgroundColor"][2]);
+        environment.ambientStrength = j["environment"]["ambientStrength"];
+    }
+
+    if (j.contains("light"))
+    {
+        light.pos = glm::vec3(j["light"]["position"][0], j["light"]["position"][1], j["light"]["position"][2]);
+        light.color = glm::vec3(j["light"]["color"][0], j["light"]["color"][1], j["light"]["color"][2]);
+        light.specularStrength = j["light"]["specularStrength"];
+    }
 
     for (const auto &item : j["meshes"])
     {
@@ -42,6 +60,4 @@ void Project::load(std::vector<Mesh> &meshes, glm::vec3 &backgroundColor, std::s
 
         meshes.push_back(mesh);
     }
-
-    backgroundColor = glm::vec3(j["background"][0], j["background"][1], j["background"][2]);
 }

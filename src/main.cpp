@@ -15,6 +15,8 @@
 #include "Project.hpp"
 #include "VertexArray.hpp"
 #include "Primitives.hpp"
+#include "Light.hpp"
+#include "Environment.hpp"
 
 int main()
 {
@@ -45,15 +47,12 @@ int main()
     // ---------------------------------------------------------------------------------------
     float lastFrame = 0.0f;
 
-    glm::vec3 backgroundColor(0.0f);
-
     std::vector<Mesh> meshes;
     Shader shader("shaders/basic.vs", "shaders/basic.fs");
     std::string projectName = "my_project";
 
-    glm::vec3 lightColor = glm::vec3{1.0f};
-    float ambientStrength = 0.5f;
-    glm::vec3 lightPos = glm::vec3(0.0f);
+    Light light(glm::vec3(0.0f), glm::vec3(1.0f), 0.5f);
+    Environment environment(glm::vec3(0.0f), 0.5f);
 
     // main loop
     while (!window.shouldClose())
@@ -65,16 +64,20 @@ int main()
         lastFrame = currentFrame;
 
         // ---------------------------------------------------------------------------------------
-        glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0f);
+        glClearColor(environment.backgroundColor.x, environment.backgroundColor.y, environment.backgroundColor.z, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         Input::process(dt);
 
         // ---------------------------------------------------------------------------------------
-        shader.setUniform("lightPos", lightPos);
-        shader.setUniform("lightColor", lightColor);
-        shader.setUniform("ambientStrength", ambientStrength);
+        shader.setUniform("lightPos", light.pos);
+        shader.setUniform("lightColor", light.color);
+        shader.setUniform("specularStrength", light.specularStrength);
+
+        shader.setUniform("ambientStrength", environment.ambientStrength);
+
         shader.setUniform("view", camera.getLookAt());
+        shader.setUniform("viewPos", camera.getPos());
 
         for (const Mesh &mesh : meshes)
         {
@@ -108,11 +111,14 @@ int main()
         ImGui::Text("Vendor: %s", (const char *)glGetString(GL_VENDOR));
         ImGui::Text("FPS: %.1f", 1.0f / dt);
 
+        ImGui::SeparatorText("Light");
+        ImGui::DragFloat3("Position", &light.pos.x, 0.1f);
+        ImGui::ColorEdit3("Color", &light.color.x);
+        ImGui::SliderFloat("Specular Strength", &light.specularStrength, 0.0f, 1.0f);
+
         ImGui::SeparatorText("Environment");
-        ImGui::ColorEdit3("Light", &lightColor.x);
-        ImGui::DragFloat3("Light Pos", &lightPos.x, 0.1f);
-        ImGui::SliderFloat("Ambient", &ambientStrength, 0, 1);
-        ImGui::ColorEdit3("Background", &backgroundColor.x);
+        ImGui::ColorEdit3("Background", &environment.backgroundColor.x);
+        ImGui::SliderFloat("Ambient Strength", &environment.ambientStrength, 0.0f, 1.0f);
 
         ImGui::Separator();
 
@@ -141,14 +147,14 @@ int main()
 
         if (ImGui::Button("Save"))
         {
-            Project::save(meshes, backgroundColor, projectName);
+            Project::save(light, environment, meshes, projectName);
         }
 
         ImGui::SameLine();
 
         if (ImGui::Button("Load"))
         {
-            Project::load(meshes, backgroundColor, projectName);
+            Project::load(light, environment, meshes, projectName);
         }
 
         for (int i = 0; i < meshes.size(); i++)

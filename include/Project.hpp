@@ -1,12 +1,15 @@
 #pragma once
 
 #include <vector>
-#include "Mesh.hpp"
 #include <glm/glm.hpp>
 #include <string>
 
+#include "Mesh.hpp"
+#include "Light.hpp"
+#include "Environment.hpp"
+
 namespace Project
 {
-    void save(const std::vector<Mesh> &meshes, const glm::vec3 &backgroundColor, const std::string &projectName);
-    void load(std::vector<Mesh> &meshes, glm::vec3 &backgroundColor, std::string &projectName);
+    void save(const Light &light, const Environment &environment, const std::vector<Mesh> &meshes, const std::string &projectName);
+    void load(Light &light, Environment &environment, std::vector<Mesh> &meshes, std::string &projectName);
 }
