@@ -18,7 +18,7 @@ public:
     glm::vec3 color{1.0f};
 
     Mesh(GeometryType type);
-    void update(const glm::mat4 &view, Shader &shader) const;
+    void update(const Shader &shader) const;
     GeometryType getType() const;
 
 private:

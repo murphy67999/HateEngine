@@ -5,7 +5,7 @@
 class VertexArray
 {
 public:
-    VertexArray(float *vertices, GLsizeiptr verticesSize, unsigned int *indices, GLsizeiptr indicesSize);
+    VertexArray(const float *vertices, GLsizeiptr verticesSize, const unsigned int *indices, GLsizeiptr indicesSize);
     ~VertexArray();
     void bind() const;
 

@@ -14,6 +14,7 @@
 #include "Mesh.hpp"
 #include "Project.hpp"
 #include "VertexArray.hpp"
+#include "Primitives.hpp"
 
 int main()
 {
@@ -30,53 +31,9 @@ int main()
     Input::init(window.getWindow(), &camera);
 
     // ---------------------------------------------------------------------------------------
-    float cubeVertices[] = {
-        -0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        0.5f, 0.5f, -0.5f,
-        -0.5f, 0.5f, -0.5f,
-        -0.5f, -0.5f, 0.5f,
-        0.5f, -0.5f, 0.5f,
-        0.5f, 0.5f, 0.5f,
-        -0.5f, 0.5f, 0.5f};
-
-    unsigned int cubeIndices[] = {
-        0, 1, 2, 2, 3, 0,
-        4, 5, 6, 6, 7, 4,
-        0, 3, 7, 7, 4, 0,
-        1, 5, 6, 6, 2, 1,
-        0, 1, 5, 5, 4, 0,
-        3, 2, 6, 6, 7, 3};
-
-    float pyramidVertices[] = {
-        -0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, 0.5f,
-        -0.5f, -0.5f, 0.5f,
-        0.0f, 0.5f, 0.0f};
-
-    unsigned int pyramidIndices[] = {
-        0, 2, 1, 0, 3, 2,
-        0, 1, 4, 1, 2, 4,
-        2, 3, 4, 3, 0, 4};
-
-    float octahedronVertices[] = {
-        0.0f, 0.5f, 0.0f,
-        0.0f, -0.5f, 0.0f,
-        -0.5f, 0.0f, 0.0f,
-        0.5f, 0.0f, 0.0f,
-        0.0f, 0.0f, 0.5f,
-        0.0f, 0.0f, -0.5f};
-
-    unsigned int octahedronIndices[] = {
-        0, 2, 4, 0, 4, 3,
-        0, 3, 5, 0, 5, 2,
-        1, 4, 2, 1, 3, 4,
-        1, 5, 3, 1, 2, 5};
-
-    VertexArray cube(cubeVertices, sizeof(cubeVertices), cubeIndices, sizeof(cubeIndices));
-    VertexArray pyramid(pyramidVertices, sizeof(pyramidVertices), pyramidIndices, sizeof(pyramidIndices));
-    VertexArray octahedron(octahedronVertices, sizeof(octahedronVertices), octahedronIndices, sizeof(octahedronIndices));
+    VertexArray cube(Primitives::cubeVertices, sizeof(Primitives::cubeVertices), Primitives::cubeIndices, sizeof(Primitives::cubeIndices));
+    VertexArray pyramid(Primitives::pyramidVertices, sizeof(Primitives::pyramidVertices), Primitives::pyramidIndices, sizeof(Primitives::pyramidIndices));
+    VertexArray octahedron(Primitives::octahedronVertices, sizeof(Primitives::octahedronVertices), Primitives::octahedronIndices, sizeof(Primitives::octahedronIndices));
 
     // ---------------------------------------------------------------------------------------
     IMGUI_CHECKVERSION();
@@ -91,8 +48,12 @@ int main()
     glm::vec3 backgroundColor(0.0f);
 
     std::vector<Mesh> meshes;
-    Shader shader("shaders/cube.vs", "shaders/cube.fs");
+    Shader shader("shaders/basic.vs", "shaders/basic.fs");
     std::string projectName = "my_project";
+
+    glm::vec3 lightColor = glm::vec3{1.0f};
+    float ambientStrength = 0.5f;
+    glm::vec3 lightPos = glm::vec3(0.0f);
 
     // main loop
     while (!window.shouldClose())
@@ -110,23 +71,28 @@ int main()
         Input::process(dt);
 
         // ---------------------------------------------------------------------------------------
+        shader.setUniform("lightPos", lightPos);
+        shader.setUniform("lightColor", lightColor);
+        shader.setUniform("ambientStrength", ambientStrength);
+        shader.setUniform("view", camera.getLookAt());
+
         for (const Mesh &mesh : meshes)
         {
             switch (mesh.getType())
             {
             case GeometryType::CUBE:
                 cube.bind();
-                mesh.update(camera.getLookAt(), shader);
+                mesh.update(shader);
                 glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
                 break;
             case GeometryType::PYRAMID:
                 pyramid.bind();
-                mesh.update(camera.getLookAt(), shader);
+                mesh.update(shader);
                 glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
                 break;
             case GeometryType::OCTAHEDRON:
                 octahedron.bind();
-                mesh.update(camera.getLookAt(), shader);
+                mesh.update(shader);
                 glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
                 break;
             }
@@ -142,8 +108,11 @@ int main()
         ImGui::Text("Vendor: %s", (const char *)glGetString(GL_VENDOR));
         ImGui::Text("FPS: %.1f", 1.0f / dt);
 
-        ImGui::SeparatorText("Background");
-        ImGui::ColorEdit3("Color", &backgroundColor.x);
+        ImGui::SeparatorText("Environment");
+        ImGui::ColorEdit3("Light", &lightColor.x);
+        ImGui::DragFloat3("Light Pos", &lightPos.x, 0.1f);
+        ImGui::SliderFloat("Ambient", &ambientStrength, 0, 1);
+        ImGui::ColorEdit3("Background", &backgroundColor.x);
 
         ImGui::Separator();
 
