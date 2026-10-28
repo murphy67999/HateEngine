@@ -3,20 +3,18 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <glm/glm.hpp>
-#include <vector>
 #include <string>
 #include <misc/cpp/imgui_stdlib.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Shader.hpp"
 #include "Window.hpp"
 #include "Camera.hpp"
 #include "Input.hpp"
-#include "Mesh.hpp"
 #include "Project.hpp"
 #include "VertexArray.hpp"
 #include "Primitives.hpp"
-#include "Light.hpp"
-#include "Environment.hpp"
+#include "Scene.hpp"
 
 int main()
 {
@@ -33,9 +31,9 @@ int main()
     Input::init(window.getWindow(), &camera);
 
     // ---------------------------------------------------------------------------------------
-    VertexArray cube(Primitives::cubeVertices, sizeof(Primitives::cubeVertices), Primitives::cubeIndices, sizeof(Primitives::cubeIndices));
-    VertexArray pyramid(Primitives::pyramidVertices, sizeof(Primitives::pyramidVertices), Primitives::pyramidIndices, sizeof(Primitives::pyramidIndices));
-    VertexArray octahedron(Primitives::octahedronVertices, sizeof(Primitives::octahedronVertices), Primitives::octahedronIndices, sizeof(Primitives::octahedronIndices));
+    VertexArray cubeVAO(Primitives::cubeVertices, sizeof(Primitives::cubeVertices), Primitives::cubeIndices, sizeof(Primitives::cubeIndices));
+    VertexArray pyramidVAO(Primitives::pyramidVertices, sizeof(Primitives::pyramidVertices), Primitives::pyramidIndices, sizeof(Primitives::pyramidIndices));
+    VertexArray octahedronVAO(Primitives::octahedronVertices, sizeof(Primitives::octahedronVertices), Primitives::octahedronIndices, sizeof(Primitives::octahedronIndices));
 
     // ---------------------------------------------------------------------------------------
     IMGUI_CHECKVERSION();
@@ -47,12 +45,12 @@ int main()
     // ---------------------------------------------------------------------------------------
     float lastFrame = 0.0f;
 
-    std::vector<Mesh> meshes;
     Shader shader("shaders/basic.vs", "shaders/basic.fs");
+    shader.use();
+
     std::string projectName = "my_project";
 
-    Light light(glm::vec3(0.0f), glm::vec3(1.0f), 0.5f);
-    Environment environment(glm::vec3(0.0f), 0.5f);
+    Scene scene;
 
     // main loop
     while (!window.shouldClose())
@@ -64,41 +62,58 @@ int main()
         lastFrame = currentFrame;
 
         // ---------------------------------------------------------------------------------------
-        glClearColor(environment.backgroundColor.x, environment.backgroundColor.y, environment.backgroundColor.z, 1.0f);
+        glClearColor(scene.environment.backgroundColor.x, scene.environment.backgroundColor.y, scene.environment.backgroundColor.z, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         Input::process(dt);
 
         // ---------------------------------------------------------------------------------------
-        shader.setUniform("lightPos", light.pos);
-        shader.setUniform("lightColor", light.color);
-        shader.setUniform("specularStrength", light.specularStrength);
+        shader.setUniform("lightPos", scene.light.pos);
+        shader.setUniform("lightColor", scene.light.color);
+        shader.setUniform("specularStrength", scene.light.specularStrength);
 
-        shader.setUniform("ambientStrength", environment.ambientStrength);
+        shader.setUniform("ambientStrength", scene.environment.ambientStrength);
 
-        shader.setUniform("view", camera.getLookAt());
         shader.setUniform("viewPos", camera.getPos());
 
-        for (const Mesh &mesh : meshes)
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1600.0f / 800.0f, 0.1f, 100.0f);
+        shader.setUniform("projection", projection);
+        shader.setUniform("view", camera.getLookAt());
+
+        for (const GameObject &object : scene.objects)
         {
-            switch (mesh.getType())
+            int indices = 0;
+
+            switch (object.mesh.getType())
             {
             case GeometryType::CUBE:
-                cube.bind();
-                mesh.update(shader);
-                glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+                cubeVAO.bind();
+                indices = 36;
                 break;
             case GeometryType::PYRAMID:
-                pyramid.bind();
-                mesh.update(shader);
-                glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
+                pyramidVAO.bind();
+                indices = 18;
                 break;
             case GeometryType::OCTAHEDRON:
-                octahedron.bind();
-                mesh.update(shader);
-                glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
+                octahedronVAO.bind();
+                indices = 24;
                 break;
             }
+
+            glm::mat4 model(1.0f);
+
+            model = glm::translate(model, object.transform.position);
+            model = glm::rotate(model, glm::radians(object.transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(object.transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(object.transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+            model = glm::scale(model, object.transform.scale);
+
+            shader.setUniform("model", model);
+
+            shader.setUniform("color", object.material.color);
+            shader.setUniform("emission", object.material.emission);
+
+            glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT, 0);
         }
 
         // ---------------------------------------------------------------------------------------
@@ -112,33 +127,33 @@ int main()
         ImGui::Text("FPS: %.1f", 1.0f / dt);
 
         ImGui::SeparatorText("Light");
-        ImGui::DragFloat3("Position", &light.pos.x, 0.1f);
-        ImGui::ColorEdit3("Color", &light.color.x);
-        ImGui::SliderFloat("Specular Strength", &light.specularStrength, 0.0f, 1.0f);
+        ImGui::DragFloat3("Position", &scene.light.pos.x, 0.1f);
+        ImGui::ColorEdit3("Color", &scene.light.color.x);
+        ImGui::SliderFloat("Specular Strength", &scene.light.specularStrength, 0.0f, 1.0f);
 
         ImGui::SeparatorText("Environment");
-        ImGui::ColorEdit3("Background", &environment.backgroundColor.x);
-        ImGui::SliderFloat("Ambient Strength", &environment.ambientStrength, 0.0f, 1.0f);
+        ImGui::ColorEdit3("Background", &scene.environment.backgroundColor.x);
+        ImGui::SliderFloat("Ambient Strength", &scene.environment.ambientStrength, 0.0f, 1.0f);
 
         ImGui::Separator();
 
         if (ImGui::Button("Cube"))
         {
-            meshes.emplace_back(GeometryType::CUBE);
+            scene.objects.emplace_back("Cube", GeometryType::CUBE);
         }
 
         ImGui::SameLine();
 
         if (ImGui::Button("Pyramid"))
         {
-            meshes.emplace_back(GeometryType::PYRAMID);
+            scene.objects.emplace_back("Pyramid", GeometryType::PYRAMID);
         }
 
         ImGui::SameLine();
 
         if (ImGui::Button("Octahedron"))
         {
-            meshes.emplace_back(GeometryType::OCTAHEDRON);
+            scene.objects.emplace_back("Octahedron", GeometryType::OCTAHEDRON);
         }
 
         ImGui::Separator();
@@ -147,32 +162,32 @@ int main()
 
         if (ImGui::Button("Save"))
         {
-            Project::save(light, environment, meshes, projectName);
+            Project::save(scene, projectName);
         }
-
         ImGui::SameLine();
-
         if (ImGui::Button("Load"))
         {
-            Project::load(light, environment, meshes, projectName);
+            Project::load(scene, projectName);
         }
 
-        for (int i = 0; i < meshes.size(); i++)
+        for (int i = 0; i < scene.objects.size(); i++)
         {
-            Mesh &mesh = meshes[i];
+            GameObject &object = scene.objects[i];
 
             ImGui::PushID(i);
 
-            std::string text = "Mesh " + std::to_string(i);
-
+            std::string text = "GameObject " + std::to_string(i);
             ImGui::SeparatorText(text.c_str());
-            ImGui::DragFloat3("Position", &mesh.position.x, 0.1f);
-            ImGui::DragFloat3("Scale", &mesh.scale.x, 0.1f);
-            ImGui::ColorEdit3("Color", &mesh.color.x);
-            ImGui::ColorEdit3("Emission", &mesh.emission.x);
+
+            ImGui::DragFloat3("Position", &object.transform.position.x, 0.1f);
+            ImGui::DragFloat3("Rotation", &object.transform.rotation.x, 0.1f);
+            ImGui::DragFloat3("Scale", &object.transform.scale.x, 0.1f);
+            ImGui::ColorEdit3("Color", &object.material.color.x);
+            ImGui::ColorEdit3("Emission", &object.material.emission.x);
+
             if (ImGui::Button("Delete"))
             {
-                meshes.erase(meshes.begin() + i);
+                scene.objects.erase(scene.objects.begin() + i);
             }
 
             ImGui::PopID();

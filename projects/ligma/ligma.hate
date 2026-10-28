@@ -1,0 +1,60 @@
+{
+  "environment": {
+    "ambientStrength": 0.20999999344348907,
+    "backgroundColor": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "light": {
+    "color": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "position": [
+      0.0,
+      -0.10000000149011612,
+      -0.8999999761581421
+    ],
+    "specularStrength": 1.0
+  },
+  "objects": [
+    {
+      "material": {
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "emission": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "mesh": {
+        "type": 1
+      },
+      "name": "Pyramid",
+      "transform": {
+        "position": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          -104.69999694824219
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    }
+  ]
+}

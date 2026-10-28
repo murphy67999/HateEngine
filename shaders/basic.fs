@@ -3,12 +3,12 @@
 out vec4 fragColor;
 
 uniform vec3 color;
+uniform vec3 emission;
 uniform vec3 lightPos;
 uniform vec3 lightColor;
+uniform float specularStrength;
 uniform float ambientStrength;
 uniform vec3 viewPos;
-uniform float specularStrength;
-uniform vec3 emission;
 
 in vec3 fragPos;
 in vec3 normal;
