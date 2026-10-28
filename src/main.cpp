@@ -169,6 +169,7 @@ int main()
             ImGui::DragFloat3("Position", &mesh.position.x, 0.1f);
             ImGui::DragFloat3("Scale", &mesh.scale.x, 0.1f);
             ImGui::ColorEdit3("Color", &mesh.color.x);
+            ImGui::ColorEdit3("Emission", &mesh.emission.x);
             if (ImGui::Button("Delete"))
             {
                 meshes.erase(meshes.begin() + i);

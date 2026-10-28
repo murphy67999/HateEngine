@@ -20,7 +20,8 @@ void Project::save(const Light &light, const Environment &environment, const std
         j["meshes"].push_back({{"type", mesh.getType()},
                                {"position", {mesh.position.x, mesh.position.y, mesh.position.z}},
                                {"scale", {mesh.scale.x, mesh.scale.y, mesh.scale.z}},
-                               {"color", {mesh.color.x, mesh.color.y, mesh.color.z}}});
+                               {"color", {mesh.color.x, mesh.color.y, mesh.color.z}},
+                               {"emission", {mesh.emission.x, mesh.emission.y, mesh.emission.z}}});
     }
 
     std::ofstream("projects/" + projectName + ".hate") << j.dump(2);
@@ -57,6 +58,11 @@ void Project::load(Light &light, Environment &environment, std::vector<Mesh> &me
         mesh.position = glm::vec3(item["position"][0], item["position"][1], item["position"][2]);
         mesh.scale = glm::vec3(item["scale"][0], item["scale"][1], item["scale"][2]);
         mesh.color = glm::vec3(item["color"][0], item["color"][1], item["color"][2]);
+
+        if (item.contains("emission"))
+        {
+            mesh.emission = glm::vec3(item["emission"][0], item["emission"][1], item["emission"][2]);
+        }
 
         meshes.push_back(mesh);
     }

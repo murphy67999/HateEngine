@@ -16,6 +16,7 @@ public:
     glm::vec3 position{0.0f};
     glm::vec3 scale{1.0f};
     glm::vec3 color{1.0f};
+    glm::vec3 emission{0.0f};
 
     Mesh(GeometryType type);
     void update(const Shader &shader) const;

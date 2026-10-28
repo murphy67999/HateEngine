@@ -17,6 +17,7 @@ void Mesh::update(const Shader &shader) const
     shader.setUniform("model", model);
 
     shader.setUniform("color", color);
+    shader.setUniform("emission", emission);
 }
 
 GeometryType Mesh::getType() const
