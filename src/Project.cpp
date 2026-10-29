@@ -29,7 +29,7 @@ namespace Project
         j["environment"] = {{"backgroundColor", vec3ToJson(Scene::environment.backgroundColor)},
                             {"ambientStrength", Scene::environment.ambientStrength}};
 
-        j["light"] = {{"position", vec3ToJson(Scene::light.pos)},
+        j["light"] = {{"position", vec3ToJson(Scene::light.position)},
                       {"color", vec3ToJson(Scene::light.color)},
                       {"specularStrength", Scene::light.specularStrength}};
 
@@ -42,21 +42,23 @@ namespace Project
                                     {"material", {{"color", vec3ToJson(object.material.color)}, {"emission", vec3ToJson(object.material.emission)}}}});
         }
 
-        std::filesystem::create_directory(projectName);
-        if (!std::filesystem::exists(projectName + "/main.cpp"))
+        std::string project = "projects/" + projectName;
+        std::filesystem::create_directory(project);
+
+        if (!std::filesystem::exists(project + "/main.cpp"))
         {
-            std::ofstream(projectName + "/main.cpp");
+            std::ofstream(project + "/main.cpp");
         }
-        if (!std::filesystem::exists(projectName + "/CMakeLists.txt"))
+        if (!std::filesystem::exists(project + "/CMakeLists.txt"))
         {
-            std::ofstream(projectName + "/CMakeLists.txt");
+            std::ofstream(project + "/CMakeLists.txt");
         }
-        std::ofstream(projectName + "/" + projectName + ".hate") << j.dump(2);
+        std::ofstream(project + "/" + projectName + ".hate") << j.dump(2);
     }
 
     void load(const std::string &projectName)
     {
-        std::ifstream file(projectName + "/" + projectName + ".hate");
+        std::ifstream file("projects/" + projectName + "/" + projectName + ".hate");
         if (!file)
             return;
 
@@ -68,7 +70,7 @@ namespace Project
         Scene::environment.backgroundColor = jsonToVec3(j["environment"]["backgroundColor"]);
         Scene::environment.ambientStrength = j["environment"]["ambientStrength"];
 
-        Scene::light.pos = jsonToVec3(j["light"]["position"]);
+        Scene::light.position = jsonToVec3(j["light"]["position"]);
         Scene::light.color = jsonToVec3(j["light"]["color"]);
         Scene::light.specularStrength = j["light"]["specularStrength"];
 

@@ -24,6 +24,8 @@ add_library(HateEngine STATIC
     src/Project.cpp
     src/VertexArray.cpp
     src/Scene.cpp
+    src/Engine.cpp
+    src/Renderer.cpp
 )
 
 target_include_directories(HateEngine PUBLIC
@@ -39,4 +41,5 @@ target_link_libraries(HateEngine PUBLIC
 )
 
 add_subdirectory(editor)
-add_subdirectory(sigma)
+add_subdirectory(projects/sigma)
+add_subdirectory(projects/ligma)

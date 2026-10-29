@@ -1,5 +1,3 @@
-#include <glad/glad.h>
-
 #include "Window.hpp"
 
 namespace
