@@ -21,8 +21,8 @@ namespace
         if (firstMouse)
         {
             firstMouse = false;
-            lastX = 800.0f;
-            lastY = 400.0f;
+            lastX = newX;
+            lastY = newY;
         }
 
         float xOffset = newX - lastX;

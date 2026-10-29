@@ -21,7 +21,9 @@ int main()
     std::cout << "hello Hate Engine\n";
 
     // ---------------------------------------------------------------------------------------
-    Window window(1600, 800, "Hate Engine");
+    const float WINDOW_WIDTH = 1920.0f;
+    const float WINDOW_HEIGHT = 1080.0f;
+    Window window(WINDOW_WIDTH, WINDOW_HEIGHT, "Hate Engine");
     if (!window.isValid())
         return 1;
 
@@ -41,6 +43,11 @@ int main()
     ImGui_ImplGlfw_InitForOpenGL(window.getWindow(), true);
     ImGui_ImplOpenGL3_Init("#version 330");
     ImGui::GetStyle().ScaleAllSizes(2.0f);
+
+    ImGuiIO &io = ImGui::GetIO();
+    io.Fonts->AddFontFromFileTTF(
+        "assets/fonts/Inter_24pt-Medium.ttf",
+        24.0f);
 
     // ---------------------------------------------------------------------------------------
     float lastFrame = 0.0f;
@@ -76,7 +83,7 @@ int main()
 
         shader.setUniform("viewPos", camera.getPos());
 
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1600.0f / 800.0f, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.0f);
         shader.setUniform("projection", projection);
         shader.setUniform("view", camera.getLookAt());
 
@@ -121,11 +128,13 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::Begin("CONFIGURE");
+        ImGui::Begin("Engine Stats", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
         ImGui::Text("GPU: %s", (const char *)glGetString(GL_RENDERER));
         ImGui::Text("Vendor: %s", (const char *)glGetString(GL_VENDOR));
         ImGui::Text("FPS: %.1f", 1.0f / dt);
+        ImGui::End();
 
+        ImGui::Begin("Scene Hierarchy", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
         ImGui::SeparatorText("Light");
         ImGui::DragFloat3("Position", &scene.light.pos.x, 0.1f);
         ImGui::ColorEdit3("Color", &scene.light.color.x);
@@ -135,39 +144,20 @@ int main()
         ImGui::ColorEdit3("Background", &scene.environment.backgroundColor.x);
         ImGui::SliderFloat("Ambient Strength", &scene.environment.ambientStrength, 0.0f, 1.0f);
 
-        ImGui::Separator();
-
+        ImGui::SeparatorText("Spawn");
         if (ImGui::Button("Cube"))
         {
             scene.objects.emplace_back("Cube", GeometryType::CUBE);
         }
-
         ImGui::SameLine();
-
         if (ImGui::Button("Pyramid"))
         {
             scene.objects.emplace_back("Pyramid", GeometryType::PYRAMID);
         }
-
         ImGui::SameLine();
-
         if (ImGui::Button("Octahedron"))
         {
             scene.objects.emplace_back("Octahedron", GeometryType::OCTAHEDRON);
-        }
-
-        ImGui::Separator();
-
-        ImGui::InputText("Project Name", &projectName);
-
-        if (ImGui::Button("Save"))
-        {
-            Project::save(scene, projectName);
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("Load"))
-        {
-            Project::load(scene, projectName);
         }
 
         for (int i = 0; i < scene.objects.size(); i++)
@@ -192,7 +182,19 @@ int main()
 
             ImGui::PopID();
         }
+        ImGui::End();
 
+        ImGui::Begin("Project Manager", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+        ImGui::InputText("Project Name", &projectName);
+        if (ImGui::Button("Save"))
+        {
+            Project::save(scene, projectName);
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Load"))
+        {
+            Project::load(scene, projectName);
+        }
         ImGui::End();
 
         ImGui::Render();
