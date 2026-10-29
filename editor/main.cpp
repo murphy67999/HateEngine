@@ -57,9 +57,7 @@ int main()
 
     std::string projectName = "my_project";
 
-    Scene scene;
-
-    // main loop
+    // ---------------------------------------------------------------------------------------
     while (!window.shouldClose())
     {
         // ---------------------------------------------------------------------------------------
@@ -69,17 +67,17 @@ int main()
         lastFrame = currentFrame;
 
         // ---------------------------------------------------------------------------------------
-        glClearColor(scene.environment.backgroundColor.x, scene.environment.backgroundColor.y, scene.environment.backgroundColor.z, 1.0f);
+        glClearColor(Scene::environment.backgroundColor.x, Scene::environment.backgroundColor.y, Scene::environment.backgroundColor.z, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         Input::process(dt);
 
         // ---------------------------------------------------------------------------------------
-        shader.setUniform("lightPos", scene.light.pos);
-        shader.setUniform("lightColor", scene.light.color);
-        shader.setUniform("specularStrength", scene.light.specularStrength);
+        shader.setUniform("lightPos", Scene::light.pos);
+        shader.setUniform("lightColor", Scene::light.color);
+        shader.setUniform("specularStrength", Scene::light.specularStrength);
 
-        shader.setUniform("ambientStrength", scene.environment.ambientStrength);
+        shader.setUniform("ambientStrength", Scene::environment.ambientStrength);
 
         shader.setUniform("viewPos", camera.getPos());
 
@@ -87,7 +85,7 @@ int main()
         shader.setUniform("projection", projection);
         shader.setUniform("view", camera.getLookAt());
 
-        for (const GameObject &object : scene.objects)
+        for (const GameObject &object : Scene::objects)
         {
             int indices = 0;
 
@@ -136,33 +134,33 @@ int main()
 
         ImGui::Begin("Scene Hierarchy", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
         ImGui::SeparatorText("Light");
-        ImGui::DragFloat3("Position", &scene.light.pos.x, 0.1f);
-        ImGui::ColorEdit3("Color", &scene.light.color.x);
-        ImGui::SliderFloat("Specular Strength", &scene.light.specularStrength, 0.0f, 1.0f);
+        ImGui::DragFloat3("Position", &Scene::light.pos.x, 0.1f);
+        ImGui::ColorEdit3("Color", &Scene::light.color.x);
+        ImGui::SliderFloat("Specular Strength", &Scene::light.specularStrength, 0.0f, 1.0f);
 
         ImGui::SeparatorText("Environment");
-        ImGui::ColorEdit3("Background", &scene.environment.backgroundColor.x);
-        ImGui::SliderFloat("Ambient Strength", &scene.environment.ambientStrength, 0.0f, 1.0f);
+        ImGui::ColorEdit3("Background", &Scene::environment.backgroundColor.x);
+        ImGui::SliderFloat("Ambient Strength", &Scene::environment.ambientStrength, 0.0f, 1.0f);
 
         ImGui::SeparatorText("Spawn");
         if (ImGui::Button("Cube"))
         {
-            scene.objects.emplace_back("Cube", GeometryType::CUBE);
+            Scene::objects.emplace_back("Cube", GeometryType::CUBE);
         }
         ImGui::SameLine();
         if (ImGui::Button("Pyramid"))
         {
-            scene.objects.emplace_back("Pyramid", GeometryType::PYRAMID);
+            Scene::objects.emplace_back("Pyramid", GeometryType::PYRAMID);
         }
         ImGui::SameLine();
         if (ImGui::Button("Octahedron"))
         {
-            scene.objects.emplace_back("Octahedron", GeometryType::OCTAHEDRON);
+            Scene::objects.emplace_back("Octahedron", GeometryType::OCTAHEDRON);
         }
 
-        for (int i = 0; i < scene.objects.size(); i++)
+        for (int i = 0; i < Scene::objects.size(); i++)
         {
-            GameObject &object = scene.objects[i];
+            GameObject &object = Scene::objects[i];
 
             ImGui::PushID(i);
 
@@ -177,7 +175,7 @@ int main()
 
             if (ImGui::Button("Delete"))
             {
-                scene.objects.erase(scene.objects.begin() + i);
+                Scene::objects.erase(Scene::objects.begin() + i);
             }
 
             ImGui::PopID();
@@ -188,12 +186,12 @@ int main()
         ImGui::InputText("Project Name", &projectName);
         if (ImGui::Button("Save"))
         {
-            Project::save(scene, projectName);
+            Project::save(projectName);
         }
         ImGui::SameLine();
         if (ImGui::Button("Load"))
         {
-            Project::load(scene, projectName);
+            Project::load(projectName);
         }
         ImGui::End();
 
@@ -207,6 +205,4 @@ int main()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
-
-    return 0;
 }

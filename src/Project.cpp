@@ -5,6 +5,7 @@
 #include <filesystem>
 #include "GameObject.hpp"
 #include <iostream>
+#include "Scene.hpp"
 
 namespace
 {
@@ -21,19 +22,19 @@ namespace
 
 namespace Project
 {
-    void save(const Scene &scene, const std::string &projectName)
+    void save(const std::string &projectName)
     {
         nlohmann::json j;
 
-        j["environment"] = {{"backgroundColor", vec3ToJson(scene.environment.backgroundColor)},
-                            {"ambientStrength", scene.environment.ambientStrength}};
+        j["environment"] = {{"backgroundColor", vec3ToJson(Scene::environment.backgroundColor)},
+                            {"ambientStrength", Scene::environment.ambientStrength}};
 
-        j["light"] = {{"position", vec3ToJson(scene.light.pos)},
-                      {"color", vec3ToJson(scene.light.color)},
-                      {"specularStrength", scene.light.specularStrength}};
+        j["light"] = {{"position", vec3ToJson(Scene::light.pos)},
+                      {"color", vec3ToJson(Scene::light.color)},
+                      {"specularStrength", Scene::light.specularStrength}};
 
         j["objects"] = nlohmann::json::array();
-        for (const GameObject &object : scene.objects)
+        for (const GameObject &object : Scene::objects)
         {
             j["objects"].push_back({{"name", object.name},
                                     {"transform", {{"position", vec3ToJson(object.transform.position)}, {"rotation", vec3ToJson(object.transform.rotation)}, {"scale", vec3ToJson(object.transform.scale)}}},
@@ -41,27 +42,35 @@ namespace Project
                                     {"material", {{"color", vec3ToJson(object.material.color)}, {"emission", vec3ToJson(object.material.emission)}}}});
         }
 
-        std::filesystem::create_directory("projects/" + projectName);
-        std::ofstream("projects/" + projectName + "/" + projectName + ".hate") << j.dump(2);
+        std::filesystem::create_directory(projectName);
+        if (!std::filesystem::exists(projectName + "/main.cpp"))
+        {
+            std::ofstream(projectName + "/main.cpp");
+        }
+        if (!std::filesystem::exists(projectName + "/CMakeLists.txt"))
+        {
+            std::ofstream(projectName + "/CMakeLists.txt");
+        }
+        std::ofstream(projectName + "/" + projectName + ".hate") << j.dump(2);
     }
 
-    void load(Scene &scene, const std::string &projectName)
+    void load(const std::string &projectName)
     {
-        std::ifstream file("projects/" + projectName + "/" + projectName + ".hate");
+        std::ifstream file(projectName + "/" + projectName + ".hate");
         if (!file)
             return;
 
         nlohmann::json j;
         file >> j;
 
-        scene.objects.clear();
+        Scene::objects.clear();
 
-        scene.environment.backgroundColor = jsonToVec3(j["environment"]["backgroundColor"]);
-        scene.environment.ambientStrength = j["environment"]["ambientStrength"];
+        Scene::environment.backgroundColor = jsonToVec3(j["environment"]["backgroundColor"]);
+        Scene::environment.ambientStrength = j["environment"]["ambientStrength"];
 
-        scene.light.pos = jsonToVec3(j["light"]["position"]);
-        scene.light.color = jsonToVec3(j["light"]["color"]);
-        scene.light.specularStrength = j["light"]["specularStrength"];
+        Scene::light.pos = jsonToVec3(j["light"]["position"]);
+        Scene::light.color = jsonToVec3(j["light"]["color"]);
+        Scene::light.specularStrength = j["light"]["specularStrength"];
 
         for (const auto &item : j["objects"])
         {
@@ -77,7 +86,7 @@ namespace Project
             object.material.color = jsonToVec3(item["material"]["color"]);
             object.material.emission = jsonToVec3(item["material"]["emission"]);
 
-            scene.objects.push_back(object);
+            Scene::objects.push_back(object);
         }
     }
 }

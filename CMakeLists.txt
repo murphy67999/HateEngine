@@ -6,8 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 find_package(glfw3 REQUIRED)
 
-add_executable(HateEngine
-    src/main.cpp
+add_library(HateEngine STATIC
     external/glad/src/glad.c
     src/Window.cpp
     src/Shader.cpp
@@ -24,9 +23,10 @@ add_executable(HateEngine
     external/imgui/misc/cpp/imgui_stdlib.cpp
     src/Project.cpp
     src/VertexArray.cpp
+    src/Scene.cpp
 )
 
-target_include_directories(HateEngine PRIVATE
+target_include_directories(HateEngine PUBLIC
     include/
     external/
     external/glad/include/
@@ -34,6 +34,9 @@ target_include_directories(HateEngine PRIVATE
     external/imgui/
 )
 
-target_link_libraries(HateEngine PRIVATE
+target_link_libraries(HateEngine PUBLIC
     glfw
 )
+
+add_subdirectory(editor)
+add_subdirectory(sigma)

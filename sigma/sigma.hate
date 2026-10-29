@@ -1,10 +1,10 @@
 {
   "environment": {
-    "ambientStrength": 0.20999999344348907,
+    "ambientStrength": 0.5,
     "backgroundColor": [
-      0.0,
-      0.0,
-      0.0
+      0.1486021876335144,
+      0.3993740379810333,
+      0.552971601486206
     ]
   },
   "light": {
@@ -15,10 +15,10 @@
     ],
     "position": [
       0.0,
-      -0.10000000149011612,
-      -0.8999999761581421
+      0.0,
+      0.0
     ],
-    "specularStrength": 1.0
+    "specularStrength": 0.5
   },
   "objects": [
     {
@@ -29,25 +29,25 @@
           1.0
         ],
         "emission": [
-          0.0,
-          0.0,
+          0.41860461235046387,
+          1.0,
           0.0
         ]
       },
       "mesh": {
-        "type": 1
+        "type": 2
       },
-      "name": "Pyramid",
+      "name": "Octahedron",
       "transform": {
         "position": [
           0.0,
-          -1.0,
+          0.0,
           0.0
         ],
         "rotation": [
           0.0,
           0.0,
-          -104.69999694824219
+          0.0
         ],
         "scale": [
           1.0,
