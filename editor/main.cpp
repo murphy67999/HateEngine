@@ -6,10 +6,12 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <misc/cpp/imgui_stdlib.h>
+#include <iostream>
 
 namespace
 {
     std::string projectName;
+    std::string objectName;
 }
 
 void ready(Window &window)
@@ -24,6 +26,12 @@ void ready(Window &window)
     io.Fonts->AddFontFromFileTTF(
         "editor/assets/fonts/Inter_24pt-Medium.ttf",
         24.0f);
+
+    ImGuiStyle &style = ImGui::GetStyle();
+    style.Colors[ImGuiCol_TitleBg] = ImVec4(0.45f, 0.04f, 0.12f, 1.00f);
+    style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.85f, 0.05f, 0.20f, 1.00f);
+    style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.28f, 0.03f, 0.08f, 1.00f);
+    style.Colors[ImGuiCol_Text] = ImVec4(1.00f, 0.92f, 0.94f, 1.00f);
 }
 
 void update(float dt)
@@ -48,36 +56,59 @@ void update(float dt)
     ImGui::ColorEdit3("Background", &Scene::environment.backgroundColor.x);
     ImGui::SliderFloat("Ambient Strength", &Scene::environment.ambientStrength, 0.0f, 1.0f);
 
-    ImGui::SeparatorText("Spawn");
-    if (ImGui::Button("Cube"))
+    ImGui::InputText("Object Name", &objectName);
+    if (ImGui::Button("Create"))
     {
-        Scene::objects.emplace_back("Cube", GeometryType::CUBE);
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Pyramid"))
-    {
-        Scene::objects.emplace_back("Pyramid", GeometryType::PYRAMID);
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Octahedron"))
-    {
-        Scene::objects.emplace_back("Octahedron", GeometryType::OCTAHEDRON);
+        Scene::objects.emplace_back(objectName);
     }
 
     for (int i = 0; i < Scene::objects.size(); i++)
     {
         GameObject &object = Scene::objects[i];
 
-        ImGui::PushID(i);
+        ImGui::SeparatorText(object.name.c_str());
 
-        std::string text = "GameObject " + std::to_string(i);
-        ImGui::SeparatorText(text.c_str());
+        ImGui::PushID(i);
 
         ImGui::DragFloat3("Position", &object.transform.position.x, 0.1f);
         ImGui::DragFloat3("Rotation", &object.transform.rotation.x, 0.1f);
         ImGui::DragFloat3("Scale", &object.transform.scale.x, 0.1f);
-        ImGui::ColorEdit3("Color", &object.material.color.x);
-        ImGui::ColorEdit3("Emission", &object.material.emission.x);
+
+        if (ImGui::Button("Cube"))
+        {
+            object.meshes.emplace_back(GeometryType::CUBE);
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Pyramid"))
+        {
+            object.meshes.emplace_back(GeometryType::PYRAMID);
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Octahedron"))
+        {
+            object.meshes.emplace_back(GeometryType::OCTAHEDRON);
+        }
+
+        for (int j = 0; j < object.meshes.size(); j++)
+        {
+            ImGui::PushID(j);
+
+            Mesh &mesh = object.meshes[j];
+
+            ImGui::Separator();
+            ImGui::DragFloat3("Position", &mesh.transform.position.x, 0.1f);
+            ImGui::DragFloat3("Rotation", &mesh.transform.rotation.x, 0.1f);
+            ImGui::DragFloat3("Scale", &mesh.transform.scale.x, 0.1f);
+            ImGui::ColorEdit3("Color", &mesh.material.color.x);
+            ImGui::ColorEdit3("Emission", &mesh.material.emission.x);
+
+            if (ImGui::Button("Delete"))
+            {
+                object.meshes.erase(object.meshes.begin() + j);
+            }
+
+            ImGui::PopID();
+        }
 
         if (ImGui::Button("Delete"))
         {

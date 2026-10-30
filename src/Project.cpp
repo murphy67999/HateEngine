@@ -36,10 +36,19 @@ namespace Project
         j["objects"] = nlohmann::json::array();
         for (const GameObject &object : Scene::objects)
         {
+            nlohmann::json meshes = nlohmann::json::array();
+
+            for (const Mesh &mesh : object.meshes)
+            {
+                meshes.push_back({{"type", mesh.getType()},
+                                  {"transform", {{"position", vec3ToJson(mesh.transform.position)}, {"rotation", vec3ToJson(mesh.transform.rotation)}, {"scale", vec3ToJson(mesh.transform.scale)}}},
+                                  {"color", vec3ToJson(mesh.material.color)},
+                                  {"emission", vec3ToJson(mesh.material.emission)}});
+            }
+
             j["objects"].push_back({{"name", object.name},
                                     {"transform", {{"position", vec3ToJson(object.transform.position)}, {"rotation", vec3ToJson(object.transform.rotation)}, {"scale", vec3ToJson(object.transform.scale)}}},
-                                    {"mesh", {{"type", static_cast<int>(object.mesh.getType())}}},
-                                    {"material", {{"color", vec3ToJson(object.material.color)}, {"emission", vec3ToJson(object.material.emission)}}}});
+                                    {"meshes", meshes}});
         }
 
         std::string project = "projects/" + projectName;
@@ -80,17 +89,24 @@ namespace Project
 
         for (const auto &item : j["objects"])
         {
-            std::string name = item["name"];
-            GeometryType type = item["mesh"]["type"];
-
-            GameObject object(name, type);
+            GameObject object(item["name"]);
 
             object.transform.position = jsonToVec3(item["transform"]["position"]);
             object.transform.rotation = jsonToVec3(item["transform"]["rotation"]);
             object.transform.scale = jsonToVec3(item["transform"]["scale"]);
 
-            object.material.color = jsonToVec3(item["material"]["color"]);
-            object.material.emission = jsonToVec3(item["material"]["emission"]);
+            for (const auto &item2 : item["meshes"])
+            {
+                Mesh mesh(item2["type"]);
+
+                mesh.transform.position = jsonToVec3(item2["transform"]["position"]);
+                mesh.transform.rotation = jsonToVec3(item2["transform"]["rotation"]);
+                mesh.transform.scale = jsonToVec3(item2["transform"]["scale"]);
+                mesh.material.color = jsonToVec3(item2["color"]);
+                mesh.material.emission = jsonToVec3(item2["emission"]);
+
+                object.meshes.push_back(mesh);
+            }
 
             Scene::objects.push_back(object);
         }
