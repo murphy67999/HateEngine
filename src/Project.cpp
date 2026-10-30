@@ -47,11 +47,15 @@ namespace Project
 
         if (!std::filesystem::exists(project + "/main.cpp"))
         {
-            std::ofstream(project + "/main.cpp");
+            std::filesystem::copy_file(
+                "templates/main.cpp",
+                project + "/main.cpp");
         }
         if (!std::filesystem::exists(project + "/CMakeLists.txt"))
         {
-            std::ofstream(project + "/CMakeLists.txt");
+            std::filesystem::copy_file(
+                "templates/CMakeLists.txt",
+                project + "/CMakeLists.txt");
         }
         std::ofstream(project + "/" + projectName + ".hate") << j.dump(2);
     }

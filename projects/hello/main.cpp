@@ -9,5 +9,5 @@ void end() {}
 int main()
 {
     Engine engine;
-    engine.run(ready, update, end, "ligma");
+    engine.run(ready, update, end, "hello");
 }

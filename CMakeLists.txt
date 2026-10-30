@@ -41,5 +41,11 @@ target_link_libraries(HateEngine PUBLIC
 )
 
 add_subdirectory(editor)
-add_subdirectory(projects/sigma)
-add_subdirectory(projects/ligma)
+
+file(GLOB PROJECTS CONFIGURE_DEPENDS "projects/*")
+
+foreach(PROJECT ${PROJECTS})
+    if(EXISTS "${PROJECT}/CMakeLists.txt")
+        add_subdirectory(${PROJECT})
+    endif()
+endforeach()

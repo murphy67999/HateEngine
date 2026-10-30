@@ -1,0 +1,95 @@
+{
+  "environment": {
+    "ambientStrength": 0.3269999921321869,
+    "backgroundColor": [
+      0.2139294296503067,
+      0.4599483013153076,
+      0.25588610768318176
+    ]
+  },
+  "light": {
+    "color": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "position": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "specularStrength": 0.5
+  },
+  "objects": [
+    {
+      "material": {
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "emission": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "mesh": {
+        "type": 1
+      },
+      "name": "Pyramid",
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "material": {
+        "color": [
+          0.9948320388793945,
+          0.0,
+          0.0
+        ],
+        "emission": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "mesh": {
+        "type": 0
+      },
+      "name": "Cube",
+      "transform": {
+        "position": [
+          0.0,
+          -0.8999999761581421,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    }
+  ]
+}
