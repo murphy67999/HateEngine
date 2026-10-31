@@ -29,26 +29,35 @@ namespace Project
         j["environment"] = {{"backgroundColor", vec3ToJson(Scene::environment.backgroundColor)},
                             {"ambientStrength", Scene::environment.ambientStrength}};
 
-        j["light"] = {{"position", vec3ToJson(Scene::light.position)},
-                      {"color", vec3ToJson(Scene::light.color)},
-                      {"specularStrength", Scene::light.specularStrength}};
-
         j["objects"] = nlohmann::json::array();
+
         for (const GameObject &object : Scene::objects)
         {
             nlohmann::json meshes = nlohmann::json::array();
+            nlohmann::json pointLights = nlohmann::json::array();
 
             for (const Mesh &mesh : object.meshes)
             {
                 meshes.push_back({{"type", mesh.getType()},
                                   {"transform", {{"position", vec3ToJson(mesh.transform.position)}, {"rotation", vec3ToJson(mesh.transform.rotation)}, {"scale", vec3ToJson(mesh.transform.scale)}}},
                                   {"color", vec3ToJson(mesh.material.color)},
-                                  {"emission", vec3ToJson(mesh.material.emission)}});
+                                  {"emission", vec3ToJson(mesh.material.emission)},
+                                  {"specularStrength", mesh.material.specularStrength},
+                                  {"shininess", mesh.material.shininess}});
+            }
+
+            for (const PointLight &pointLight : object.pointLights)
+            {
+                pointLights.push_back(
+                    {{"position", vec3ToJson(pointLight.position)},
+                     {"color", vec3ToJson(pointLight.color)},
+                     {"intensity", pointLight.intensity}});
             }
 
             j["objects"].push_back({{"name", object.name},
                                     {"transform", {{"position", vec3ToJson(object.transform.position)}, {"rotation", vec3ToJson(object.transform.rotation)}, {"scale", vec3ToJson(object.transform.scale)}}},
-                                    {"meshes", meshes}});
+                                    {"meshes", meshes},
+                                    {"pointLights", pointLights}});
         }
 
         std::string project = "projects/" + projectName;
@@ -83,10 +92,6 @@ namespace Project
         Scene::environment.backgroundColor = jsonToVec3(j["environment"]["backgroundColor"]);
         Scene::environment.ambientStrength = j["environment"]["ambientStrength"];
 
-        Scene::light.position = jsonToVec3(j["light"]["position"]);
-        Scene::light.color = jsonToVec3(j["light"]["color"]);
-        Scene::light.specularStrength = j["light"]["specularStrength"];
-
         for (const auto &item : j["objects"])
         {
             GameObject object(item["name"]);
@@ -104,8 +109,21 @@ namespace Project
                 mesh.transform.scale = jsonToVec3(item2["transform"]["scale"]);
                 mesh.material.color = jsonToVec3(item2["color"]);
                 mesh.material.emission = jsonToVec3(item2["emission"]);
+                mesh.material.specularStrength = item2["specularStrength"];
+                mesh.material.shininess = item2["shininess"];
 
                 object.meshes.push_back(mesh);
+            }
+
+            for (const auto &item2 : item["pointLights"])
+            {
+                PointLight pointLight;
+
+                pointLight.position = jsonToVec3(item2["position"]);
+                pointLight.color = jsonToVec3(item2["color"]);
+                pointLight.intensity = item2["intensity"];
+
+                object.pointLights.push_back(pointLight);
             }
 
             Scene::objects.push_back(object);

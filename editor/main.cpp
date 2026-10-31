@@ -82,10 +82,10 @@ void imguiUpdate(float dt)
     ImGui::End();
 
     ImGui::Begin("Scene Hierarchy", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-    ImGui::SeparatorText("Light");
-    ImGui::DragFloat3("Position", &Scene::light.position.x, 0.1f);
-    ImGui::ColorEdit3("Color", &Scene::light.color.x);
-    ImGui::SliderFloat("Specular Strength", &Scene::light.specularStrength, 0.0f, 1.0f);
+    // ImGui::SeparatorText("Light");
+    // ImGui::DragFloat3("Position", &Scene::light.position.x, 0.1f);
+    // ImGui::ColorEdit3("Color", &Scene::light.color.x);
+    // ImGui::SliderFloat("Specular Strength", &Scene::light.specularStrength, 0.0f, 1.0f);
 
     ImGui::SeparatorText("Environment");
     ImGui::ColorEdit3("Background", &Scene::environment.backgroundColor.x);
@@ -123,9 +123,15 @@ void imguiUpdate(float dt)
         {
             object.meshes.emplace_back(GeometryType::OCTAHEDRON);
         }
+        ImGui::SameLine();
+        if (ImGui::Button("Point Light"))
+        {
+            object.pointLights.emplace_back();
+        }
 
         for (int j = 0; j < object.meshes.size(); j++)
         {
+            ImGui::PushID("mesh");
             ImGui::PushID(j);
 
             Mesh &mesh = object.meshes[j];
@@ -136,6 +142,8 @@ void imguiUpdate(float dt)
             ImGui::DragFloat3("Scale", &mesh.transform.scale.x, 0.1f);
             ImGui::ColorEdit3("Color", &mesh.material.color.x);
             ImGui::ColorEdit3("Emission", &mesh.material.emission.x);
+            ImGui::SliderFloat("Specular Strength", &mesh.material.specularStrength, 0.0f, 1.0f);
+            ImGui::SliderFloat("Shininess", &mesh.material.shininess, 1.0f, 256.0f);
 
             if (ImGui::Button("Delete"))
             {
@@ -143,8 +151,31 @@ void imguiUpdate(float dt)
             }
 
             ImGui::PopID();
+            ImGui::PopID();
         }
 
+        for (int j = 0; j < object.pointLights.size(); j++)
+        {
+            ImGui::PushID("pointLight");
+            ImGui::PushID(j);
+
+            PointLight &pointLight = object.pointLights[j];
+
+            ImGui::Separator();
+            ImGui::DragFloat3("Position", &pointLight.position.x, 0.1f);
+            ImGui::ColorEdit3("Color", &pointLight.color.x);
+            ImGui::SliderFloat("Intensity", &pointLight.intensity, 0.0f, 10.0f);
+
+            if (ImGui::Button("Delete"))
+            {
+                object.pointLights.erase(object.pointLights.begin() + j);
+            }
+
+            ImGui::PopID();
+            ImGui::PopID();
+        }
+
+        ImGui::Separator();
         if (ImGui::Button("Delete"))
         {
             Scene::objects.erase(Scene::objects.begin() + i);

@@ -21,10 +21,6 @@ void Renderer::render(const Camera &camera) const
     glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_shader.setUniform("lightPos", Scene::light.position);
-    m_shader.setUniform("lightColor", Scene::light.color);
-    m_shader.setUniform("specularStrength", Scene::light.specularStrength);
-
     m_shader.setUniform("ambientStrength", Scene::environment.ambientStrength);
 
     m_shader.setUniform("viewPos", camera.position);
@@ -32,8 +28,25 @@ void Renderer::render(const Camera &camera) const
     m_shader.setUniform("projection", camera.getProjectionMatrix());
     m_shader.setUniform("view", camera.getViewMatrix());
 
+    int pointLightCount = 0;
     for (const GameObject &object : Scene::objects)
     {
+        for (const PointLight &pointLight : object.pointLights)
+        {
+            std::string index = "[" + std::to_string(pointLightCount) + "]";
+            m_shader.setUniform("pointLights" + index + ".position", pointLight.position);
+            m_shader.setUniform("pointLights" + index + ".color", pointLight.color);
+            m_shader.setUniform("pointLights" + index + ".intensity", pointLight.intensity);
+
+            pointLightCount++;
+        }
+    }
+
+    m_shader.setUniform("pointLightCount", pointLightCount);
+
+    for (const GameObject &object : Scene::objects)
+    {
+
         int indices = 0;
 
         for (const Mesh &mesh : object.meshes)
@@ -72,6 +85,8 @@ void Renderer::render(const Camera &camera) const
 
             m_shader.setUniform("color", mesh.material.color);
             m_shader.setUniform("emission", mesh.material.emission);
+            m_shader.setUniform("specularStrength", mesh.material.specularStrength);
+            m_shader.setUniform("shininess", mesh.material.shininess);
 
             glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT, 0);
         }

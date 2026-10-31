@@ -2,11 +2,20 @@
 
 out vec4 fragColor;
 
-uniform vec3 lightPos;
-uniform vec3 lightColor;
-uniform float specularStrength;
+struct PointLight {
+    vec3 position;
+    vec3 color;
+    float intensity;
+};
+
+uniform PointLight pointLights[10];
+uniform int pointLightCount;
+
 uniform vec3 color;
 uniform vec3 emission;
+uniform float specularStrength;
+uniform float shininess;
+
 uniform float ambientStrength;
 uniform vec3 viewPos;
 
@@ -14,19 +23,28 @@ in vec3 fragPos;
 in vec3 normal;
 
 void main() {
-    vec3 ambient = ambientStrength * lightColor;
-
     vec3 norm = normalize(normal);
-    vec3 lightDir = normalize(lightPos - fragPos);
-    float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * lightColor;
-
     vec3 viewDir = normalize(viewPos - fragPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64);
-    vec3 specular = specularStrength * spec * lightColor;
+    vec3 ambient = ambientStrength * color;
+    vec3 diffuse = vec3(0.0);
+    vec3 specular = vec3(0.0);
 
-    vec3 result = (ambient + diffuse + specular) * color + emission;
+    for(int i = 0; i < pointLightCount; i++) {
+        vec3 lightDir = normalize(pointLights[i].position - fragPos);
+        vec3 radiance = pointLights[i].color * pointLights[i].intensity;
+
+        float diff = max(dot(norm, lightDir), 0.0);
+        diffuse += diff * radiance;
+
+        if(diff > 0.0) {
+            vec3 reflectDir = reflect(-lightDir, norm);
+            float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+
+            specular += specularStrength * spec * radiance;
+        }
+    }
+
+    vec3 result = (ambient + diffuse) * color + specular + emission;
 
     fragColor = vec4(result, 1.0);
 }
