@@ -15,7 +15,7 @@ Renderer::Renderer()
     m_shader.use();
 }
 
-void Renderer::render() const
+void Renderer::render(const Camera &camera) const
 {
     glm::vec3 backgroundColor = Scene::environment.backgroundColor;
     glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0f);
@@ -27,11 +27,10 @@ void Renderer::render() const
 
     m_shader.setUniform("ambientStrength", Scene::environment.ambientStrength);
 
-    m_shader.setUniform("viewPos", m_camera.getPos());
+    m_shader.setUniform("viewPos", camera.position);
 
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 100.0f);
-    m_shader.setUniform("projection", projection);
-    m_shader.setUniform("view", m_camera.getLookAt());
+    m_shader.setUniform("projection", camera.getProjectionMatrix());
+    m_shader.setUniform("view", camera.getViewMatrix());
 
     for (const GameObject &object : Scene::objects)
     {
@@ -77,9 +76,4 @@ void Renderer::render() const
             glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT, 0);
         }
     }
-}
-
-Camera *Renderer::getCamera()
-{
-    return &m_camera;
 }

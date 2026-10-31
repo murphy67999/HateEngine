@@ -5,21 +5,10 @@
 class Camera
 {
 public:
-    Camera(glm::vec3 pos, glm::vec3 front, glm::vec3 up);
-    void moveForward(float dt);
-    void moveBackward(float dt);
-    void moveLeft(float dt);
-    void moveRight(float dt);
-    glm::mat4 getLookAt() const;
-    void processMouseMovement(float xOffset, float yOffset);
-    glm::vec3 getPos() const;
+    glm::vec3 position{0.0f, 0.0f, 3.0f};
+    glm::vec3 direction{0.0f, 0.0f, -1.0f};
+    glm::vec3 up{0.0f, 1.0f, 0.0f};
 
-private:
-    glm::vec3 m_pos;
-    glm::vec3 m_front;
-    glm::vec3 m_up;
-    static constexpr float m_speed = 5.0f;
-    float m_yaw = -90.0f;
-    float m_pitch = 0.0f;
-    static constexpr float m_sensitivity = 0.1f;
+    glm::mat4 getProjectionMatrix() const;
+    glm::mat4 getViewMatrix() const;
 };

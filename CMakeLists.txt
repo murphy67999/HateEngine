@@ -11,7 +11,6 @@ add_library(HateEngine STATIC
     src/Window.cpp
     src/Shader.cpp
     src/Texture.cpp
-    src/Input.cpp
     src/Camera.cpp
     external/imgui/imgui.cpp
     external/imgui/imgui_draw.cpp

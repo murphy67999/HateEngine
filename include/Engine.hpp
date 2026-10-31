@@ -1,16 +1,17 @@
 #pragma once
 
+#include "Window.hpp"
+#include "Renderer.hpp"
 #include <functional>
 #include <string>
 
-#include "Window.hpp"
-
-class Engine
+namespace Engine
 {
-public:
+    extern Window window;
+    extern Renderer renderer;
+
     void run(
-        std::function<void(Window &)> ready,
+        std::function<void()> ready,
         std::function<void(float)> update,
-        std::function<void()> end,
-        std::string projectName) const;
-};
+        std::function<void()> end);
+}

@@ -1,40 +1,40 @@
 #include "Engine.hpp"
 
-#include "Renderer.hpp"
-#include "Input.hpp"
 #include "Project.hpp"
+#include <filesystem>
+#include "Scene.hpp"
 
-void Engine::run(
-    std::function<void(Window &)> ready,
-    std::function<void(float)> update,
-    std::function<void()> end,
-    std::string projectName) const
+namespace Engine
 {
-    Window window(1920, 1080, projectName);
+    Window window(1920, 1080, "YOUR_TITLE");
     Renderer renderer;
-    Input::init(window.getWindow(), renderer.getCamera());
 
-    Project::load(projectName);
-
-    ready(window);
-
-    float lastFrame = 0.0f;
-
-    while (!window.shouldClose())
+    void run(
+        std::function<void()> ready,
+        std::function<void(float)> update,
+        std::function<void()> end)
     {
-        float dt = 0.0f;
-        float currentFrame = static_cast<float>(glfwGetTime());
-        dt = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+        std::string projectName = std::filesystem::read_symlink("/proc/self/exe").filename().string();
+        Project::load(projectName);
 
-        Input::process(dt);
+        ready();
 
-        renderer.render();
+        float lastFrame = 0.0f;
 
-        update(dt);
+        while (!window.shouldClose())
+        {
+            float dt = 0.0f;
+            float currentFrame = static_cast<float>(glfwGetTime());
+            dt = currentFrame - lastFrame;
+            lastFrame = currentFrame;
 
-        window.update();
+            renderer.render(Scene::camera);
+
+            update(dt);
+
+            window.update();
+        }
+
+        end();
     }
-
-    end();
 }

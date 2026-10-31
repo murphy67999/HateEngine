@@ -7,18 +7,40 @@
 #include <backends/imgui_impl_opengl3.h>
 #include <misc/cpp/imgui_stdlib.h>
 #include <iostream>
+#include <glm/glm.hpp>
+
+void ready();
+void update(float dt);
+void end();
+void imguiUpdate(float dt);
+void inputUpdate(float dt);
+void cursorPosCallback(GLFWwindow *window, double xPos, double yPos);
+void rotateCamera(float xOffset, float yOffset);
+
+int main()
+{
+    Engine::run(ready, update, end);
+}
 
 namespace
 {
     std::string projectName;
     std::string objectName;
+    float cameraSpeed = 5.0f;
+    bool lockCamera = false;
+    float cameraSensitivity = 0.1f;
+    float cameraYaw = -90.0f;
+    float cameraPitch = 0.0f;
+    bool firstMouse = true;
 }
 
-void ready(Window &window)
+void ready()
 {
+    glfwSetCursorPosCallback(Engine::window.getWindow(), cursorPosCallback);
+
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGui_ImplGlfw_InitForOpenGL(window.getWindow(), true);
+    ImGui_ImplGlfw_InitForOpenGL(Engine::window.getWindow(), true);
     ImGui_ImplOpenGL3_Init("#version 330");
     ImGui::GetStyle().ScaleAllSizes(2.0f);
 
@@ -35,6 +57,19 @@ void ready(Window &window)
 }
 
 void update(float dt)
+{
+    imguiUpdate(dt);
+    inputUpdate(dt);
+}
+
+void end()
+{
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+}
+
+void imguiUpdate(float dt)
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -136,15 +171,76 @@ void update(float dt)
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void end()
+void inputUpdate(float dt)
 {
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    if (glfwGetKey(Engine::window.getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(Engine::window.getWindow(), true);
+    }
+
+    float finalSpeed = cameraSpeed * dt;
+    if (glfwGetKey(Engine::window.getWindow(), GLFW_KEY_W) == GLFW_PRESS)
+        Scene::camera.position += Scene::camera.direction * finalSpeed;
+    if (glfwGetKey(Engine::window.getWindow(), GLFW_KEY_S) == GLFW_PRESS)
+        Scene::camera.position -= Scene::camera.direction * finalSpeed;
+    if (glfwGetKey(Engine::window.getWindow(), GLFW_KEY_A) == GLFW_PRESS)
+        Scene::camera.position -= glm::normalize(glm::cross(Scene::camera.direction, Scene::camera.up)) * finalSpeed;
+    if (glfwGetKey(Engine::window.getWindow(), GLFW_KEY_D) == GLFW_PRESS)
+        Scene::camera.position += glm::normalize(glm::cross(Scene::camera.direction, Scene::camera.up)) * finalSpeed;
+
+    static bool zWasPressed = false;
+    bool zIsPressed = glfwGetKey(Engine::window.getWindow(), GLFW_KEY_Z) == GLFW_PRESS;
+    if (zIsPressed && !zWasPressed)
+    {
+        lockCamera = !lockCamera;
+
+        if (lockCamera)
+        {
+            firstMouse = true;
+            glfwSetInputMode(Engine::window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+        else
+        {
+            glfwSetInputMode(Engine::window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+    }
+
+    zWasPressed = zIsPressed;
 }
 
-int main()
+void cursorPosCallback(GLFWwindow *window, double xPos, double yPos)
 {
-    Engine engine;
-    engine.run(ready, update, end, "editor");
+    if (!lockCamera)
+        return;
+
+    static float lastX = 0.0f;
+    static float lastY = 0.0f;
+
+    if (firstMouse)
+    {
+        firstMouse = false;
+        lastX = xPos;
+        lastY = yPos;
+        return;
+    }
+
+    float xOffset = xPos - lastX;
+    float yOffset = lastY - yPos;
+
+    lastX = xPos;
+    lastY = yPos;
+
+    rotateCamera(xOffset, yOffset);
+}
+
+void rotateCamera(float xOffset, float yOffset)
+{
+    cameraYaw += xOffset * cameraSensitivity;
+    cameraPitch += yOffset * cameraSensitivity;
+
+    cameraPitch = glm::clamp(cameraPitch, -89.0f, 89.0f);
+
+    Scene::camera.direction.x = cos(glm::radians(cameraYaw)) * cos(glm::radians(cameraPitch));
+    Scene::camera.direction.y = sin(glm::radians(cameraPitch));
+    Scene::camera.direction.z = sin(glm::radians(cameraYaw)) * cos(glm::radians(cameraPitch));
 }
